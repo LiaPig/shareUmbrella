@@ -28,7 +28,7 @@
         </el-col>
         <!--用户录入按钮-->
         <el-col :span="3" style="float: right;text-align: right">
-          <el-button type="warning" size="small" icon="el-icon-plus">用户录入</el-button>
+          <el-button type="warning" size="small" icon="el-icon-plus" @click="handleAdd">用户录入</el-button>
         </el-col>
       </el-row>
     </el-row>
@@ -185,6 +185,10 @@
         ;
     },
     methods: {
+      // 录入用户
+      handleAdd() {
+        this.$router.push({path:"/user/add"});
+      },
       // 删除用户
       handleDelete(data) {
         const that = this;

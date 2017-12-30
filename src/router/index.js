@@ -5,6 +5,8 @@ Vue.use(Router);
 // 懒加载组件
 const home = () => import('Pages/home/home.vue');
 const user = () => import('Pages/userManage/index.vue');
+const addUser = () => import('Pages/userManage/add/index.vue');
+
 
 const routes = [
   {
@@ -22,6 +24,13 @@ const routes = [
       {
         path: '/user',
         component: user,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
+        path: '/user/add',
+        component: addUser,
         meta: {
           requiresAuth: true
         }
