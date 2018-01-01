@@ -6,7 +6,7 @@ Vue.use(Router);
 const home = () => import('Pages/home/home.vue');
 const user = () => import('Pages/userManage/index.vue');
 const addUser = () => import('Pages/userManage/add/index.vue');
-
+const editUser = () => import('Pages/userManage/edit/index.vue');
 
 const routes = [
   {
@@ -30,11 +30,21 @@ const routes = [
       },
       {
         path: '/user/add',
+        name: 'addUser',
         component: addUser,
         meta: {
           requiresAuth: true
         }
       },
+      {
+        path: '/user/edit',
+        name: 'editUser',
+        component: editUser,
+        meta: {
+          requiresAuth: true
+        }
+      },
+
     ]
   }
 ];

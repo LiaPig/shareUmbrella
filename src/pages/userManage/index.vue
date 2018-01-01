@@ -112,6 +112,7 @@
         // 表格数据
         tableData: [
           {
+            id: "1",
             userName: "huangliya",
             realName: '黄猪崽',
             phone: "13246825048",
@@ -120,6 +121,7 @@
             status: "1"
           },
           {
+            id: "2",
             userName: "huangliya",
             realName: '黄猪崽',
             phone: "13246825048",
@@ -128,6 +130,7 @@
             status: "1"
           },
           {
+            id: "3",
             userName: "huangliya",
             realName: '黄猪崽',
             phone: "13246825048",
@@ -136,6 +139,7 @@
             status: "1"
           },
           {
+            id: "4",
             userName: "huangliya",
             realName: '黄猪崽',
             phone: "13246825048",
@@ -143,6 +147,7 @@
             address: "广东药科大学生活区1栋362",
             status: "1"
           },{
+            id: "5",
             userName: "huangliya",
             realName: '黄猪崽',
             phone: "13246825048",
@@ -150,6 +155,7 @@
             address: "广东药科大学生活区1栋362",
             status: "1"
           },{
+            id: "6",
             userName: "huangliya",
             realName: '黄猪崽',
             phone: "13246825048",
@@ -158,6 +164,7 @@
             status: "1"
           },
           {
+            id: "7",
             userName: "huangliya",
             realName: '黄猪崽',
             phone: "13246825048",
@@ -166,6 +173,7 @@
             status: "1"
           },
           {
+            id: "8",
             userName: "huangliya",
             realName: '黄猪崽',
             phone: "13246825048",
@@ -173,6 +181,7 @@
             address: "广东药科大学生活区1栋362",
             status: "1"
           },{
+            id: "9",
             userName: "huangliya",
             realName: '黄猪崽',
             phone: "13246825048",
@@ -210,7 +219,7 @@
       },
       // 编辑用户
       handleEdit(data) {
-        alert(data.realName)
+        this.$router.push({name: 'editUser',params:{id: data.id}})
       },
       // 查看详情
       handleDetail(data) {

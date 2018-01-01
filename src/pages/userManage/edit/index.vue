@@ -2,7 +2,7 @@
   <div>
     <!--标题／操作按钮行-->
     <el-row class="top_row">
-      <el-row class="title1">:) 用户录入</el-row>
+      <el-row class="title1">:) 编辑用户信息</el-row>
       <el-row class="button_row">
         <!--提交按钮-->
         <span style="float: right;padding-right: 30px;">
@@ -15,37 +15,22 @@
         </span>
       </el-row>
     </el-row>
-    <!--新增用户表单-->
+    <!--编辑用户表单-->
     <el-row class="form">
       <el-col :span="24">
-        <el-form :model="addForm" :rules="rules" ref="addForm" label-width="100px" class="demo-ruleForm">
+        <el-form :model="editForm" :rules="rules" ref="editForm" label-width="100px" class="demo-ruleForm">
           <!--用户名／真实姓名-->
           <el-row>
             <el-col :span="2">&nbsp;</el-col>
             <el-col :span="9">
               <el-form-item label="用户名：" prop="userName">
-                <el-input v-model="addForm.userName" placeholder="请输入用户名"></el-input>
+                <el-input v-model="editForm.userName" placeholder="请输入用户名"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="1">&nbsp;</el-col>
             <el-col :span="9">
               <el-form-item label="真实姓名：" prop="realName">
-                <el-input v-model="addForm.realName" placeholder="请输入真实姓名"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <!--密码／重复密码-->
-          <el-row>
-            <el-col :span="2">&nbsp;</el-col>
-            <el-col :span="9">
-              <el-form-item label="密码：" prop="password">
-                <el-input v-model="addForm.password" placeholder="请输入密码"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="1">&nbsp;</el-col>
-            <el-col :span="9">
-              <el-form-item label="重复密码：" prop="checkPass">
-                <el-input v-model="addForm.checkPass" placeholder="请输入再次输入密码"></el-input>
+                <el-input v-model="editForm.realName" placeholder="请输入真实姓名"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -54,13 +39,13 @@
             <el-col :span="2">&nbsp;</el-col>
             <el-col :span="9">
               <el-form-item label="手机号码：" prop="phone">
-                <el-input v-model="addForm.phone" placeholder="请输入手机号码"></el-input>
+                <el-input v-model="editForm.phone" placeholder="请输入手机号码"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="1">&nbsp;</el-col>
             <el-col :span="9">
               <el-form-item label="邮箱：" prop="email">
-                <el-input v-model="addForm.email" placeholder="请输入邮箱"></el-input>
+                <el-input v-model="editForm.email" placeholder="请输入邮箱"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -73,14 +58,14 @@
                   type="textarea"
                   :rows="2"
                   placeholder="请输入居住地址"
-                  v-model="addForm.address">
+                  v-model="editForm.address">
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="1">&nbsp;</el-col>
             <el-col :span="9">
               <el-form-item label="状态：" prop="status">
-                <el-select v-model="addForm.status" placeholder="请选择" style="width: 100%">
+                <el-select v-model="editForm.status" placeholder="请选择" style="width: 100%">
                   <el-option
                     v-for="item in statusOptions"
                     :key="item.value"
@@ -92,6 +77,35 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <!--密码-->
+          <el-row>
+            <el-col :span="2">&nbsp;</el-col>
+            <el-col :span="9">
+              <el-form-item label="密码：" prop="password">
+                <el-input v-model="editForm.showPass" placeholder="请输入密码" type="password" :disabled="true"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="2">
+              <el-button @click="editPassword" style="margin-left: 10px" icon="el-icon-edit" type="warning" plain>修改密码</el-button>
+            </el-col>
+          </el-row>
+          <!--密码弹出框-->
+          <el-dialog title="修改密码" :visible.sync="showNewPassword">
+            <el-row>
+              <el-form :model="editPass" ref="editPass" :rules="passwordRules">
+                <el-col :span="2">&nbsp;</el-col>
+                <el-col :span="18">
+                  <el-form-item label="新密码：" label-width="80px" prop="password">
+                    <el-input v-model="editPass.password"></el-input>
+                  </el-form-item>
+                </el-col>
+              </el-form>
+            </el-row>
+            <div slot="footer" class="dialog-footer">
+              <el-button @click="showNewPassword = false" plain>取 消</el-button>
+              <el-button type="warning" @click="handleEditPass">修 改</el-button>
+            </div>
+          </el-dialog>
         </el-form>
       </el-col>
     </el-row>
@@ -102,24 +116,17 @@
   export default {
     data() {
       // 自定义的确认两次密码是否相同函数
-      const validatePass = (rule, value, callback) => {
-        if (value !== this.addForm.password) {
-          callback(new Error('两次输入密码不一致!'))
-        } else {
-          callback()
-        }
-      };
       return {
         // 表单
-        addForm: {
+        editForm: {
           userName: "",
           realName: "",
-          password: "",
-          checkPass: "",
           phone: "",
           email: "",
           address: "",
-          status: "1"
+          status: "1",
+          // 用来显示的密码
+//          showPass: ""
         },
         // 表单里的状态选项
         statusOptions: [
@@ -146,15 +153,6 @@
               message: '请输入中文'
             }
           ],
-          password: [
-            {required: true, message: '请输入密码', trigger: 'blur'},
-            {min: 5, max: 12, message: '长度在 5 到 12 个字符', trigger: 'blur'}
-          ],
-          checkPass: [
-            {required: true, message: '请再次输入密码', trigger: 'blur'},
-            {min: 5, max: 12, message: '长度在 5 到 12 个字符', trigger: 'blur'},
-            {validator: validatePass, trigger: 'blur'}
-          ],
           phone: [
             {required: true, message: '请输入手机号码', trigger: 'blur'},
             {
@@ -177,6 +175,20 @@
             {required: true, message: '请选择状态', trigger: 'change'}
           ]
         },
+
+        // 修改密码
+        editPass: {
+          password: "",
+        },
+        // 是否显示修改密码弹窗
+        showNewPassword: false,
+        // 修改密码里的表单验证
+        passwordRules: {
+          password: [
+            {required: true, message: '请输入密码', trigger: 'blur'},
+            {min: 5, max: 12, message: '长度在 5 到 12 个字符', trigger: 'blur'}
+          ],
+        },
       };
     },
     methods: {
@@ -187,7 +199,7 @@
       // 点击提交
       submitForm() {
         const that = this;
-        that.$refs.addForm.validate((valid) => {
+        that.$refs.editForm.validate((valid) => {
           if (valid) {
             this.$message.success("点击提交了哦");
           } else {
@@ -196,6 +208,44 @@
           }
         });
       },
+      // 根据id获取用户信息
+      getFormData(id) {
+        this.editForm = {
+          userName: "huangliya",
+          realName: "黄猪崽" + id,
+          showPass: "12345678",
+          phone: "13246825048",
+          email: "418607528@qq.com",
+          address: "广东药科大学生活区1栋362",
+          status: "1"
+        }
+      },
+      // 点击修改密码打开修改密码弹窗
+      editPassword() {
+        // 1.打开弹窗
+        this.showNewPassword = true;
+      },
+      // 点击修改密码弹窗里的修改按钮
+      handleEditPass() {
+        this.$refs.editPass.validate((valid) => {
+          if (valid) {
+            this.$message.success("修改密码成功！新密码为" + this.editPass.password);
+            // 关闭弹窗
+            this.showNewPassword = false;
+          } else {
+            this.$message.warning("提交失败，请检查填写是否符合条件");
+            return false;
+          }
+        });
+      }
+    },
+    mounted() {
+      const userId = this.$route.params.id;
+      if (!userId) {
+        this.$router.push({path: '/user'})
+      } else {
+        this.getFormData(userId);
+      }
     }
   }
 </script>
