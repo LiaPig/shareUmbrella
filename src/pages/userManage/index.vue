@@ -97,6 +97,58 @@
         </el-table>
       </template>
     </el-row>
+    <!--用户详情弹窗-->
+    <el-dialog title="查看用户详情" :visible.sync="showDetail">
+      <el-row class="userDetail">
+        <!--用户名／真实姓名-->
+        <el-row style="padding-top: 30px">
+          <!--用户名-->
+          <el-col :span="11">
+            <el-col :span="12" class="title">◆ 用户名：</el-col>
+            <el-col :span="12" class="content">{{detail.userName}}</el-col>
+          </el-col>
+          <!--真实姓名-->
+          <el-col :span="9">
+            <el-col :span="12" class="title">◆ 真实姓名：</el-col>
+            <el-col :span="12" class="content">{{detail.realName}}</el-col>
+          </el-col>
+        </el-row>
+        <!--手机号码／邮箱-->
+        <el-row style="padding-top: 10px">
+          <!--手机号码-->
+          <el-col :span="11">
+            <el-col :span="12" class="title">◆ 手机号码：</el-col>
+            <el-col :span="12" class="content">{{detail.phone}}</el-col>
+          </el-col>
+          <!--邮箱-->
+          <el-col :span="9">
+            <el-col :span="12" class="title">◆ 邮箱地址：</el-col>
+            <el-col :span="12" class="content">{{detail.email}}</el-col>
+          </el-col>
+        </el-row>
+        <!--地址-->
+        <el-row style="padding-top: 10px;">
+          <!--地址-->
+          <el-col :span="22">
+            <el-col :span="6" class="title">◆ 地址：</el-col>
+            <el-col :span="16" class="content">{{detail.address}}</el-col>
+          </el-col>
+        </el-row>
+        <!--状态-->
+        <el-row style="padding-top: 10px;padding-bottom: 30px;">
+          <el-col :span="22">
+            <el-col :span="6" class="title">◆ 状态：</el-col>
+            <el-col :span="16" class="content">
+              <span v-if="detail.status === '1'">正常</span>
+              <span v-else>禁用</span>
+            </el-col>
+          </el-col>
+        </el-row>
+      </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="warning" @click="showDetail = false">确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -146,7 +198,7 @@
             email: "418607528@qq.com",
             address: "广东药科大学生活区1栋362",
             status: "1"
-          },{
+          }, {
             id: "5",
             userName: "huangliya",
             realName: '黄猪崽',
@@ -154,7 +206,7 @@
             email: "418607528@qq.com",
             address: "广东药科大学生活区1栋362",
             status: "1"
-          },{
+          }, {
             id: "6",
             userName: "huangliya",
             realName: '黄猪崽',
@@ -180,7 +232,7 @@
             email: "418607528@qq.com",
             address: "广东药科大学生活区1栋362",
             status: "1"
-          },{
+          }, {
             id: "9",
             userName: "huangliya",
             realName: '黄猪崽',
@@ -190,13 +242,17 @@
             status: "1"
           },
         ],
+
+        // 是否显示查看详情弹窗
+        showDetail: false,
+        // 详情弹窗里的数据
+        detail: {},
       }
-        ;
     },
     methods: {
       // 录入用户
       handleAdd() {
-        this.$router.push({path:"/user/add"});
+        this.$router.push({path: "/user/add"});
       },
       // 删除用户
       handleDelete(data) {
@@ -219,11 +275,22 @@
       },
       // 编辑用户
       handleEdit(data) {
-        this.$router.push({name: 'editUser',params:{id: data.id}})
+        this.$router.push({name: 'editUser', params: {id: data.id}});
       },
       // 查看详情
       handleDetail(data) {
-        alert(data.realName)
+        this.showDetail = true;
+
+        this.detail = {
+          id: "1",
+          userName: "huangliya",
+          realName: '黄猪崽' + data.id,
+          phone: "13246825048",
+          email: "418607528@qq.com",
+          address: "广东药科大学生活区1栋362",
+          status: "1"
+        }
+//        alert(data.realName)
       }
 
     }
@@ -282,9 +349,26 @@
     margin-left: 3%;
     background-color: #ffffff;
   }
-  .el-table th{
+
+  .el-table th {
     background-color: #eef1f6;
     text-align: center;
     color: black;
+  }
+
+  .userDetail {
+    border: 1px solid #DCDFE6;
+    font-size: 15px;
+  }
+
+  .userDetail .title {
+    text-align: right;
+    color: #E6A23C;
+  }
+
+  .userDetail .content {
+    text-align: left;
+    color: #909399;
+
   }
 </style>
