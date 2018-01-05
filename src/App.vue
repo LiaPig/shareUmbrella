@@ -31,4 +31,44 @@ export default {
     color: #2c3e50;
     margin-top: 0;
   }
+  .el-dialog__header {
+    background-color: #707880;
+    border: 1px solid #ffffff;
+  }
+  .el-dialog__title,.el-dialog__headerbtn .el-dialog__close {
+    color: #ffd04b !important;
+  }
+  .el-table th {
+    background-color: #eef1f6;
+    text-align: center;
+    color: black;
+  }
+  .top_row {
+    width: 100%;
+    height: 100px;
+    line-height: 100px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #DCDFE6;
+    margin-bottom: 10px;
+  }
+  .title1 {
+    float: left;
+    margin-left: 20px;
+    width: calc(100% - 40px);
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    color: #000000;
+    text-align: left;
+    border-bottom: 1px solid #DCDFE6;
+  }
+  .lia_table {
+    margin-top: 20px;
+    width: 94%;
+    height: 550px;
+    padding: 10px 10px 10px 10px;
+    overflow: auto;
+    margin-left: 3%;
+    background-color: #ffffff;
+  }
 </style>

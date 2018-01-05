@@ -246,7 +246,7 @@
       } else {
         this.getFormData(userId);
       }
-    }
+    },
   }
 </script>
 

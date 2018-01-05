@@ -7,6 +7,7 @@ const home = () => import('Pages/home/home.vue');
 const user = () => import('Pages/userManage/index.vue');
 const addUser = () => import('Pages/userManage/add/index.vue');
 const editUser = () => import('Pages/userManage/edit/index.vue');
+const menu = () => import('Pages/menuManage/index.vue');
 
 const routes = [
   {
@@ -21,6 +22,7 @@ const routes = [
           requiresAuth: true
         }
       },
+      // 用户管理
       {
         path: '/user',
         component: user,
@@ -40,6 +42,15 @@ const routes = [
         path: '/user/edit',
         name: 'editUser',
         component: editUser,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      // 菜单管理
+      {
+        path: '/menu',
+        name: 'menu',
+        component: menu,
         meta: {
           requiresAuth: true
         }

@@ -33,7 +33,7 @@
       </el-row>
     </el-row>
     <!--用户管理表格-->
-    <el-row class="user_table">
+    <el-row class="lia_table">
       <template style="">
         <el-table
           :data="tableData"
@@ -350,11 +350,6 @@
     background-color: #ffffff;
   }
 
-  .el-table th {
-    background-color: #eef1f6;
-    text-align: center;
-    color: black;
-  }
 
   .userDetail {
     border: 1px solid #DCDFE6;
