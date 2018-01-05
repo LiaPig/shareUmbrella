@@ -71,7 +71,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="11" class="warning">
-              菜单名称范围4~16位字符,且不为空
+              菜单名称范围2~16位字符,且不为空
             </el-col>
             <el-col :span="1">&nbsp;</el-col>
           </el-row>
@@ -109,6 +109,46 @@
           <el-button type="warning" @click="formSubmit">确 定</el-button>
         </div>
       </el-dialog>
+      <!--菜单详情弹窗-->
+      <el-dialog title="查看菜单详情" :visible.sync="showDetail">
+        <el-row class="dialogDetail">
+          <!--菜单名称／菜单顺序-->
+          <el-row style="padding-top: 30px">
+            <!--菜单名称-->
+            <el-col :span="11">
+              <el-col :span="12" class="title">◆ 菜单名称：</el-col>
+              <el-col :span="12" class="content">{{detail.title}}</el-col>
+            </el-col>
+            <!--菜单顺序-->
+            <el-col :span="9">
+              <el-col :span="12" class="title">◆ 菜单顺序：</el-col>
+              <el-col :span="12" class="content">{{detail.key}}</el-col>
+            </el-col>
+          </el-row>
+          <!--菜单地址／邮箱-->
+          <el-row style="padding-top: 10px">
+            <!--菜单地址-->
+            <el-col :span="22">
+              <el-col :span="6" class="title">◆ 菜单地址：</el-col>
+              <el-col :span="16" class="content">{{detail.path}}</el-col>
+            </el-col>
+          </el-row>
+          <!--菜单图标-->
+          <el-row style="padding-top: 10px;margin-bottom: 30px">
+            <!--菜单图标-->
+            <el-col :span="22">
+              <el-col :span="6" class="title">◆ 菜单图标：</el-col>
+              <el-col :span="16" class="content">
+                {{detail.icon}}
+                <span :class="detail.icon" style="margin-left: 10px;font-size: 18px;color: #E6A23C;"></span>
+              </el-col>
+            </el-col>
+          </el-row>
+        </el-row>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="warning" @click="showDetail = false">确定</el-button>
+        </div>
+      </el-dialog>
     </div>
 </template>
 
@@ -133,50 +173,59 @@
               formRules: {
                 title: [
                   {required: true, message: '请输入菜单名称', trigger: 'blur'},
-                  {min: 4, max: 16, message: '长度在 4 到 16 个字符', trigger: 'blur'}
+                  {min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur'}
                 ],
                 path: [
                   {required: true, message: '请输入菜单地址', trigger: 'blur'}
                 ],
                 key: [
                   {
-                    pattern: /^\d{1,2}$/, message: '请输入2到99的数字'}
+                    pattern: /^\d{1,2}$/, message: '请输入 2 到 99 的数字'}
                 ]
               },
 
               // 表格数据
               tableData: [
                 {
+                  id: "123456",
                   key: 1,
                   path: '/home',
                   icon: 'iconfont icon-pengyou',
                   title: '首页',
                 },
                 {
+                  id: "123456",
                   key: 2,
                   path: '/user',
                   icon: 'iconfont icon-shouye',
                   title: '用户管理',
                 },
                 {
+                  id: "123456",
                   key: 3,
                   path: '/menu',
                   icon: 'iconfont icon-leimu',
                   title: '菜单管理',
                 },
                 {
+                  id: "123456",
                   key: 4,
                   path: '/umbrella',
                   icon: 'iconfont icon-yusan1',
                   title: '雨伞管理',
                 },
                 {
+                  id: "123456",
                   key: 5,
                   path: '/location',
                   icon: 'iconfont icon-dianpu',
                   title: '租借点管理',
                 },
-              ]
+              ],
+              // 是否显示详情弹窗
+              showDetail: false,
+              // 详情弹窗的数据
+              detail: {},
             };
         },
         methods: {
@@ -190,20 +239,62 @@
                 path: "",
                 key: 99,
             };
+            // 打开弹窗
+            this.showDialog = true;
+          },
+          // 点击某一行里的编辑按钮
+          handleEdit(data) {
+            this.formType = 2;
+            this.formTitle = "编辑菜单";
+            this.form = data;
+            // 打开弹窗
             this.showDialog = true;
           },
           // 点击弹窗里的确认按钮(formType,2为编辑)
           formSubmit() {
-            if(this.formType === 1) {
-              this.$refs["form"].validate((valid) => {
-                if (valid) {
+            this.$refs["form"].validate((valid) => {
+              if (valid) {
+                // 1.录入(新增)
+                if(this.formType === 1) {
                   this.$message.success("录入成功！");
-                  this.showDialog = false;
-                } else {
-                  return false;
                 }
+                // 2.编辑(修改)
+                else if (this.formType === 2) {
+                  this.$message.success("修改成功！");
+                }
+                // 关闭弹窗
+                this.showDialog = false;
+              } else {
+                return false;
+              }
+            });
+
+          },
+          // 点击某一行里的删除按钮
+          handleDelete(data) {
+            const that = this;
+            that.$confirm('此操作将删除该菜单, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              that.$message({
+                type: 'success',
+                message: '删除成功!'
               });
-            }
+            }).catch(() => {
+              that.$message({
+                type: 'info',
+                message: '已取消删除'
+              });
+            });
+          },
+          // 点击某一行里的查看详情
+          handleDetail(data) {
+            this.detail = data;
+            // 打开弹窗
+            this.showDetail = true;
+            console.log(data)
           }
         }
     }

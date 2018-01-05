@@ -51,6 +51,14 @@ export default {
     border-bottom: 1px solid #DCDFE6;
     margin-bottom: 10px;
   }
+  .search {
+    float: left;
+    margin-left: 20px;
+    width: calc(100% - 40px);
+    height: 60px;
+    line-height: 60px;
+    font-size: 14px;
+  }
   .title1 {
     float: left;
     margin-left: 20px;
@@ -70,5 +78,20 @@ export default {
     overflow: auto;
     margin-left: 3%;
     background-color: #ffffff;
+  }
+  .dialogDetail {
+    border: 1px solid #DCDFE6;
+    font-size: 15px;
+  }
+
+  .dialogDetail .title {
+    text-align: right;
+    color: #E6A23C;
+  }
+
+  .dialogDetail .content {
+    text-align: left;
+    color: #909399;
+
   }
 </style>

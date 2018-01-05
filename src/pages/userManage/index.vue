@@ -99,7 +99,7 @@
     </el-row>
     <!--用户详情弹窗-->
     <el-dialog title="查看用户详情" :visible.sync="showDetail">
-      <el-row class="userDetail">
+      <el-row class="dialogDetail">
         <!--用户名／真实姓名-->
         <el-row style="padding-top: 30px">
           <!--用户名-->
@@ -117,7 +117,7 @@
         <el-row style="padding-top: 10px">
           <!--手机号码-->
           <el-col :span="11">
-            <el-col :span="12" class="title">◆ 手机号码：</el-col>
+            <el-col :span="12" class="title">◆ 手机号：</el-col>
             <el-col :span="12" class="content">{{detail.phone}}</el-col>
           </el-col>
           <!--邮箱-->
@@ -298,35 +298,7 @@
 </script>
 
 <style>
-  .top_row {
-    width: 100%;
-    height: 100px;
-    line-height: 100px;
-    background-color: #ffffff;
-    border-bottom: 1px solid #DCDFE6;
-    margin-bottom: 10px;
-  }
 
-  .title1 {
-    float: left;
-    margin-left: 20px;
-    width: calc(100% - 40px);
-    height: 40px;
-    line-height: 40px;
-    font-size: 16px;
-    color: #000000;
-    text-align: left;
-    border-bottom: 1px solid #DCDFE6;
-  }
-
-  .search {
-    float: left;
-    margin-left: 20px;
-    width: calc(100% - 40px);
-    height: 60px;
-    line-height: 60px;
-    font-size: 14px;
-  }
 
   .title2 {
     width: 70px;
@@ -340,30 +312,4 @@
     height: 60px;
   }
 
-  .user_table {
-    margin-top: 20px;
-    width: 94%;
-    height: 550px;
-    padding: 10px 10px 10px 10px;
-    overflow: auto;
-    margin-left: 3%;
-    background-color: #ffffff;
-  }
-
-
-  .userDetail {
-    border: 1px solid #DCDFE6;
-    font-size: 15px;
-  }
-
-  .userDetail .title {
-    text-align: right;
-    color: #E6A23C;
-  }
-
-  .userDetail .content {
-    text-align: left;
-    color: #909399;
-
-  }
 </style>
