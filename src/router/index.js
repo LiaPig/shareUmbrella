@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
+
 Vue.use(Router);
 // 懒加载组件
 const home = () => import('Pages/home/home.vue');
@@ -8,6 +9,7 @@ const user = () => import('Pages/userManage/index.vue');
 const addUser = () => import('Pages/userManage/add/index.vue');
 const editUser = () => import('Pages/userManage/edit/index.vue');
 const menu = () => import('Pages/menuManage/index.vue');
+const umbrella = () => import('Pages/umbrellaManage/index.vue');
 
 const routes = [
   {
@@ -55,7 +57,24 @@ const routes = [
           requiresAuth: true
         }
       },
-
+      // 雨伞管理
+      {
+        path: '/umbrella',
+        name: 'umbrella',
+        component: umbrella,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      // 租借点管理
+      {
+        path: '/location',
+        name: 'location',
+        component: umbrella,
+        meta: {
+          requiresAuth: true
+        }
+      },
     ]
   }
 ];

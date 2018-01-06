@@ -2,11 +2,11 @@
   <div>
     <!--标题／操作按钮行-->
     <el-row class="top_row">
-      <el-row class="title1">:) 菜单管理</el-row>
+      <el-row class="title1">:) 雨伞管理</el-row>
       <el-row class="search">
-        <!--菜单录入按钮-->
+        <!--雨伞录入按钮-->
         <el-col :span="3" style="float: right;text-align: right;">
-          <el-button type="warning" size="small" icon="el-icon-plus" @click="handleAdd">菜单录入</el-button>
+          <el-button type="warning" size="small" icon="el-icon-plus" @click="handleAdd">雨伞录入</el-button>
         </el-col>
       </el-row>
     </el-row>
@@ -255,7 +255,7 @@
       // 点击菜单录入按钮
       handleAdd() {
         this.formType = 1;
-        this.formTitle = "菜单录入";
+        this.formTitle = "雨伞录入";
         this.form = {
           title: "",
           icon: "",
