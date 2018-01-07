@@ -10,10 +10,10 @@ import store from './store'
 
 import VueQuillEditor from 'vue-quill-editor'
 
-Vue.use(VueQuillEditor)
-Vue.use(ElementUI)
+Vue.use(VueQuillEditor);
+Vue.use(ElementUI);
 // Vue.use(Vuex)
-Vue.use(store)
+Vue.use(store);
 
 
 

@@ -10,9 +10,13 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@xkeshi/vue-qrcode": "github:xkeshi/vue-qrcode",
     "element-ui": "^2.0.7",
     "iconfont": "^0.3.1",
+    "qrcode.js": "0.0.1",
+    "qrcode.vue": "^1.5.1",
     "vue": "^2.5.2",
+    "vue-qrcode": "0.0.2",
     "vue-quill-editor": "^3.0.4",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"

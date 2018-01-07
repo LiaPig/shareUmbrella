@@ -11,12 +11,22 @@ const editUser = () => import('Pages/userManage/edit/index.vue');
 const menu = () => import('Pages/menuManage/index.vue');
 const umbrella = () => import('Pages/umbrellaManage/index.vue');
 
+const test = () => import('Pages/test.vue');
+
+
 const routes = [
   {
     path: '/',
     name: 'HelloWorld',
     component: HelloWorld,
     children: [
+      {
+        path: '/test',
+        component: test,
+        meta: {
+          requiresAuth: true
+        }
+      },
       {
         path: '/home',
         component: home,
