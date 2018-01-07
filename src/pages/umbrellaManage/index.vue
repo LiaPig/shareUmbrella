@@ -354,7 +354,8 @@
           pattern: "",
           type: "",
           region: "",
-          status: "1"
+          status: "1",
+          rentPoint: "",
         };
         // 打开弹窗
         this.showDialog = true;
