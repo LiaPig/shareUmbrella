@@ -26,10 +26,6 @@
         <el-col style="width: 80px;margin-left: 20px">
           <el-button type="primary" style="height: 40px" size="small" icon="el-icon-search">查询</el-button>
         </el-col>
-        <!--用户录入按钮-->
-        <el-col :span="3" style="float: right;text-align: right">
-          <el-button type="warning" size="small" icon="el-icon-plus" @click="handleAdd">用户录入</el-button>
-        </el-col>
       </el-row>
     </el-row>
     <!--用户管理表格-->
@@ -81,7 +77,6 @@
             label="微信头像"
             width="150">
             <template slot-scope="scope">
-              <el-button v-popover:popover1 size="small">点击查看</el-button>
               <el-popover
                 ref="popover1"
                 placement="top-start"
@@ -89,6 +84,7 @@
                 trigger="click">
                 <img :src="scope.row.avatarUrl" style="width: 200px;height: 200px"/>
               </el-popover>
+              <el-button v-popover:popover1 size="small">点击查看</el-button>
             </template>
           </el-table-column>
 
@@ -341,11 +337,6 @@
       }
     },
     methods: {
-      // 录入用户
-      handleAdd() {
-        this.$router.push({path: "/user/add"});
-      },
-      // 删除用户
       handleDelete(data) {
         const that = this;
         that.$confirm('此操作将删除该用户, 是否继续?', '提示', {
@@ -366,7 +357,7 @@
       },
       // 编辑用户
       handleEdit(data) {
-        this.$router.push({name: 'editUser', params: {id: data.id}});
+        this.$router.push({name: 'editUser', params: {data: data}});
       },
       // 查看详情
       handleDetail(data) {

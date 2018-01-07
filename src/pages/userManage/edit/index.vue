@@ -209,16 +209,8 @@
         });
       },
       // 根据id获取用户信息
-      getFormData(id) {
-        this.editForm = {
-          userName: "huangliya",
-          realName: "黄猪崽" + id,
-          showPass: "12345678",
-          phone: "13246825048",
-          email: "418607528@qq.com",
-          address: "广东药科大学生活区1栋362",
-          status: "1"
-        }
+      getFormData(data) {
+        this.editForm = data;
       },
       // 点击修改密码打开修改密码弹窗
       editPassword() {
@@ -240,11 +232,12 @@
       }
     },
     mounted() {
-      const userId = this.$route.params.id;
-      if (!userId) {
-        this.$router.push({path: '/user'})
+      const data = this.$route.params.data;
+      console.log(data)
+      if (!data) {
+        this.$router.push({name: 'loading',params: {path: '/user'}})
       } else {
-        this.getFormData(userId);
+        this.getFormData(data);
       }
     },
   }

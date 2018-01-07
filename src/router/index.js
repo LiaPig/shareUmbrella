@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 
 Vue.use(Router);
 // 懒加载组件
+const loading = () => import('Components/common/loading/index.vue');
 const home = () => import('Pages/home/home.vue');
 const user = () => import('Pages/userManage/index.vue');
 const addUser = () => import('Pages/userManage/add/index.vue');
@@ -19,9 +20,11 @@ const test = () => import('Pages/test.vue');
 const routes = [
   {
     path: '/',
+    redirect: '/home',
     name: 'HelloWorld',
     component: HelloWorld,
     children: [
+      // 测试页面
       {
         path: '/test',
         component: test,
@@ -29,6 +32,16 @@ const routes = [
           requiresAuth: true
         }
       },
+      // loading页面
+      {
+        path: '/loading',
+        name: "loading",
+        component: loading,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      // 主页
       {
         path: '/home',
         component: home,
