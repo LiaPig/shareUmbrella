@@ -1,6 +1,11 @@
 <template>
-  <div>
-    <i class="el-icon-loading" style="font-size: 50px;position: fixed;top: 40%;"></i>
+  <div style="text-align: center;font-size: 50px;">
+    <el-row style="position: fixed;top: 35%;left: 49%">
+      <i class="el-icon-loading"></i>
+    </el-row>
+    <el-row style="position: fixed;top: 45%;left: 47%;font-size: 35px">
+      加载中...
+    </el-row>
   </div>
 </template>
 
@@ -22,5 +27,7 @@
 </script>
 
 <style>
-
+  #clhTable tr {
+   display: block;
+ }
 </style>

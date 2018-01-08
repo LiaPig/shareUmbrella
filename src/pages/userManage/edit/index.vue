@@ -19,53 +19,76 @@
     <el-row class="form">
       <el-col :span="24">
         <el-form :model="editForm" :rules="rules" ref="editForm" label-width="100px" class="demo-ruleForm">
-          <!--用户名／真实姓名-->
+          <!--用户的id／开发者id-->
           <el-row>
             <el-col :span="2">&nbsp;</el-col>
             <el-col :span="9">
-              <el-form-item label="用户名：" prop="userName">
-                <el-input v-model="editForm.userName" placeholder="请输入用户名"></el-input>
+              <el-form-item label="用户的id：" prop="id">
+                <el-input v-model="editForm.id" :disabled="true"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="1">&nbsp;</el-col>
             <el-col :span="9">
-              <el-form-item label="真实姓名：" prop="realName">
-                <el-input v-model="editForm.realName" placeholder="请输入真实姓名"></el-input>
+              <el-form-item label="开发者id：" prop="openId">
+                <el-input v-model="editForm.openId" :disabled="true"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
-          <!--手机号码／邮箱-->
+          <!--微信名称／所在城市-->
           <el-row>
             <el-col :span="2">&nbsp;</el-col>
             <el-col :span="9">
-              <el-form-item label="手机号码：" prop="phone">
-                <el-input v-model="editForm.phone" placeholder="请输入手机号码"></el-input>
+              <el-form-item label="微信名称：" prop="nickName">
+                <el-input v-model="editForm.nickName" :disabled="true"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="1">&nbsp;</el-col>
             <el-col :span="9">
-              <el-form-item label="邮箱：" prop="email">
-                <el-input v-model="editForm.email" placeholder="请输入邮箱"></el-input>
+              <el-form-item label="所在城市：" prop="city">
+                <el-input v-model="editForm.city" :disabled="true"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
-          <!--地址/状态-->
+          <!--头像地址/头像预览-->
           <el-row>
             <el-col :span="2">&nbsp;</el-col>
             <el-col :span="9">
-              <el-form-item label="地址：" prop="address">
+              <el-form-item label="头像地址：" prop="avatarUrl">
                 <el-input
+                  :disabled="true"
                   type="textarea"
-                  :rows="2"
+                  :rows="4"
                   placeholder="请输入居住地址"
-                  v-model="editForm.address">
+                  v-model="editForm.avatarUrl">
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="1">&nbsp;</el-col>
             <el-col :span="9">
+              <el-form-item label="头像预览：" prop="avatarUrl">
+                <img :src="editForm.avatarUrl" style="width: 95px;height: 95px;border: 1px solid #C0C4CC;float: left;"/>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!--性别/状态-->
+          <el-row>
+            <el-col :span="2">&nbsp;</el-col>
+            <el-col :span="9">
+              <el-form-item label="性别：" prop="gender">
+                <el-select v-model="editForm.gender" :disabled="true" style="width: 100%">
+                  <el-option
+                    v-for="item in genderOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="9">
               <el-form-item label="状态：" prop="status">
-                <el-select v-model="editForm.status" placeholder="请选择" style="width: 100%">
+                <el-select v-model="editForm.status" style="width: 100%">
                   <el-option
                     v-for="item in statusOptions"
                     :key="item.value"
@@ -73,39 +96,24 @@
                     :value="item.value">
                   </el-option>
                 </el-select>
-
               </el-form-item>
             </el-col>
           </el-row>
-          <!--密码-->
+          <!--押金／租借次数-->
           <el-row>
             <el-col :span="2">&nbsp;</el-col>
             <el-col :span="9">
-              <el-form-item label="密码：" prop="password">
-                <el-input v-model="editForm.showPass" placeholder="请输入密码" type="password" :disabled="true"></el-input>
+              <el-form-item label="押金：" prop="deposit">
+                <el-input v-model="editForm.deposit"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="2">
-              <el-button @click="editPassword" style="margin-left: 10px" icon="el-icon-edit" type="warning" plain>修改密码</el-button>
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="9">
+              <el-form-item label="租借次数：" prop="usageCount">
+                <el-input v-model="editForm.usageCount"></el-input>
+              </el-form-item>
             </el-col>
           </el-row>
-          <!--密码弹出框-->
-          <el-dialog title="修改密码" :visible.sync="showNewPassword">
-            <el-row>
-              <el-form :model="editPass" ref="editPass" :rules="passwordRules">
-                <el-col :span="2">&nbsp;</el-col>
-                <el-col :span="18">
-                  <el-form-item label="新密码：" label-width="80px" prop="password">
-                    <el-input v-model="editPass.password"></el-input>
-                  </el-form-item>
-                </el-col>
-              </el-form>
-            </el-row>
-            <div slot="footer" class="dialog-footer">
-              <el-button @click="showNewPassword = false" plain>取 消</el-button>
-              <el-button type="warning" @click="handleEditPass">修 改</el-button>
-            </div>
-          </el-dialog>
         </el-form>
       </el-col>
     </el-row>
@@ -118,16 +126,18 @@
       // 自定义的确认两次密码是否相同函数
       return {
         // 表单
-        editForm: {
-          userName: "",
-          realName: "",
-          phone: "",
-          email: "",
-          address: "",
-          status: "1",
-          // 用来显示的密码
-//          showPass: ""
-        },
+        editForm: {},
+        // 表单里的性别选项
+        genderOptions: [
+          {
+            value: 1,
+            label: '男'
+          },
+          {
+            value: 2,
+            label: '女'
+          }
+        ],
         // 表单里的状态选项
         statusOptions: [
           {
@@ -141,53 +151,33 @@
         ],
         // 表单验证
         rules: {
-          userName: [
-            {required: true, message: '请输入用户名', trigger: 'blur'},
-            {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'}
+          id: [
+            {required: true, message: '', trigger: 'blur'},
           ],
-          realName: [
-            {required: true, message: '请输入真实姓名', trigger: 'blur'},
-            {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'},
-            {
-              pattern: /[\u4e00-\u9fa5]/gm,
-              message: '请输入中文'
-            }
+          openId: [
+            {required: true, message: '', trigger: 'blur'},
           ],
-          phone: [
-            {required: true, message: '请输入手机号码', trigger: 'blur'},
-            {
-              pattern: /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/,
-              message: '请输入正确的手机号码'
-            }
+          nickName: [
+            {required: true, message: '', trigger: 'blur'},
           ],
-          email: [
-            {required: true, message: '请输入邮箱地址', trigger: 'blur'},
-            {
-              pattern: /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/,
-              message: '请输入正确的邮箱地址'
-            }
+          avatarUrl: [
+            {required: true, message: '', trigger: 'blur'},
           ],
-          address: [
-            {required: true, message: '请输入住址', trigger: 'blur'},
-            {min: 5, message: '长度至少5个字符', trigger: 'blur'}
+          city: [
+            {required: true, message: '', trigger: 'blur'},
+          ],
+          gender: [
+            {required: true, message: '', trigger: 'change'},
+          ],
+          deposit: [
+            {required: true, message: '押金不能为空', trigger: 'blur'},
+          ],
+          usageCount: [
+            {required: true, message: '租借次数不能为空', trigger: 'blur'},
           ],
           status: [
             {required: true, message: '请选择状态', trigger: 'change'}
           ]
-        },
-
-        // 修改密码
-        editPass: {
-          password: "",
-        },
-        // 是否显示修改密码弹窗
-        showNewPassword: false,
-        // 修改密码里的表单验证
-        passwordRules: {
-          password: [
-            {required: true, message: '请输入密码', trigger: 'blur'},
-            {min: 5, max: 12, message: '长度在 5 到 12 个字符', trigger: 'blur'}
-          ],
         },
       };
     },

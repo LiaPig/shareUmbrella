@@ -8,9 +8,9 @@
         <el-col class="title2" style="width: 120px;">开发者平台ID：</el-col>
         <el-col class="input">
           <el-input
-            placeholder="请输入"
+            placeholder="请输入openId"
             prefix-icon="el-icon-search"
-            v-model="searchData.realName">
+            v-model="searchData.openId">
           </el-input>
         </el-col>
         <!--用户名-->
@@ -190,8 +190,8 @@
           <el-col :span="22">
             <el-col :span="6" class="title">◆ 状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态&nbsp;：</el-col>
             <el-col :span="16" class="content">
-              <span v-if="detail.status === '1'">正常</span>
-              <span v-else>禁用</span>
+              <span v-if="detail.status === '1'" style="color: #E6A23C">正常</span>
+              <span v-else style="color: #F56C6C">禁用</span>
             </el-col>
           </el-col>
         </el-row>

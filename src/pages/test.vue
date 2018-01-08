@@ -1,10 +1,9 @@
 <template>
   <div>
-    <qrcode-vue :value="value" :size="size" level="H"></qrcode-vue>
+    <h1>21312321</h1>
   </div>
 </template>
 <script>
-  import QrcodeVue from 'qrcode.vue';
 
   export default {
     data() {
