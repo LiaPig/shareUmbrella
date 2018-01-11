@@ -44,12 +44,6 @@
           </el-table-column>
           <el-table-column
             sortable
-            prop="region"
-            label="所在地区"
-            width="180">
-          </el-table-column>
-          <el-table-column
-            sortable
             label="状态"
             width="120">
             <template slot-scope="scope">
@@ -60,10 +54,42 @@
             </template>
           </el-table-column>
           <el-table-column
+            sortable
+            prop="region"
+            label="所在地区"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            sortable
+            prop="rentPoint"
+            label="租借点号码"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            sortable
+            label="是否被租用"
+            width="150">
+            <template slot-scope="scope">
+              <span v-if="scope.row.beRented === '0'">否</span>
+              <span v-else-if="scope.row.beRented === '1'">是</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            sortable
+            prop="userId"
+            label="租用的用户id"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            sortable
+            prop="beRentedNumber"
+            label="被租借次数"
+            width="150">
+          </el-table-column>
+          <el-table-column
             label="二维码"
             width="200">
             <template slot-scope="scope">
-              <el-button v-popover:popover1 size="small">点击查看</el-button>
               <el-popover
                 ref="popover1"
                 placement="top-start"
@@ -71,6 +97,7 @@
                 trigger="click">
                 <qrcode-vue :value="scope.row.id" size="200" level="H"></qrcode-vue>
               </el-popover>
+              <el-button v-popover:popover1 size="small">点击查看</el-button>
             </template>
           </el-table-column>
           <el-table-column
@@ -92,14 +119,15 @@
     <!--录入／编辑弹出框-->
     <el-dialog :title="formTitle" :visible.sync="showDialog">
       <el-form :model="form" ref="form" label-width="100px" :rules="formRules">
-        <!--雨伞类型-->
+        <!--雨伞类型/雨伞型号-->
         <el-row>
-          <el-col :span="6">&nbsp;</el-col>
-          <el-col :span="11" style="height: 40px;">
+          <!--雨伞类型-->
+          <el-col :span="1">&nbsp;</el-col>
+          <el-col :span="10" style="height: 40px;">
             <el-form-item label="雨伞类型:" prop="type">
               <el-select v-model="form.type" placeholder="请选择" style="width: 100%">
                 <el-option
-                  v-for="item in typeOptins"
+                  v-for="item in typeOptions"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -107,24 +135,37 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <!--雨伞型号-->
-        <el-row style="margin-top: 20px;">
-          <el-col :span="6">&nbsp;</el-col>
-          <el-col :span="11" style="height: 40px;">
+          <!--雨伞型号-->
+          <el-col :span="1">&nbsp;</el-col>
+          <el-col :span="10" style="height: 40px;">
             <el-form-item label="雨伞型号:" prop="pattern">
               <el-input v-model="form.pattern" placeholder="请输入雨伞型号"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
-        <!--所在地区-->
+        <!--所在地区/租借点-->
         <el-row style="margin-top: 20px;">
-          <el-col :span="6">&nbsp;</el-col>
-          <el-col :span="11" style="height: 40px;">
+          <!--所在地区-->
+          <el-col :span="1">&nbsp;</el-col>
+          <el-col :span="10" style="height: 40px;">
             <el-form-item label="所在地区:" prop="region">
               <el-select v-model="form.region" placeholder="请选择" style="width: 100%">
                 <el-option
-                  v-for="item in regionOptins"
+                  v-for="item in regionOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <!--租借点-->
+          <el-col :span="1">&nbsp;</el-col>
+          <el-col :span="10" style="height: 40px;">
+            <el-form-item label="可租借点:" prop="rentPoint">
+              <el-select v-model="form.rentPoint" placeholder="请选择" style="width: 100%">
+                <el-option
+                  v-for="item in rentPointOptions"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -133,14 +174,46 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <!--状态-->
+        <!--正被租用/用户的id-->
         <el-row style="margin-top: 20px;">
-          <el-col :span="6">&nbsp;</el-col>
-          <el-col :span="11" style="height: 40px;">
-            <el-form-item label="状态:" prop="status">
+          <!--正被租用-->
+          <el-col :span="1">&nbsp;</el-col>
+          <el-col :span="10" style="height: 40px;">
+            <el-form-item label="正被租用:" prop="beRented">
+              <el-select v-model="form.beRented" placeholder="请选择" :disabled="formType === 1" style="width: 100%">
+                <el-option
+                  v-for="item in beRentedOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <!--用户的id-->
+          <el-col :span="1">&nbsp;</el-col>
+          <el-col :span="10" style="height: 40px;">
+            <el-form-item label="用户的id:" prop="userId">
+              <el-input v-model="form.userId" :disabled="formType === 1"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!--被租次数/雨伞状态-->
+        <el-row style="margin-top: 20px;">
+          <!--被租次数-->
+          <el-col :span="1">&nbsp;</el-col>
+          <el-col :span="10" style="height: 40px;">
+            <el-form-item label="被租次数:" prop="beRentedNumber">
+              <el-input v-model="form.beRentedNumber" :disabled="formType === 1"></el-input>
+            </el-form-item>
+          </el-col>
+          <!--雨伞状态-->
+          <el-col :span="1">&nbsp;</el-col>
+          <el-col :span="10" style="height: 40px;">
+            <el-form-item label="雨伞状态:" prop="beRentedNumber">
               <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
                 <el-option
-                  v-for="item in statusOptins"
+                  v-for="item in statusOptions"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -167,7 +240,7 @@
           </el-col>
           <!--雨伞类型-->
           <el-col :span="9">
-            <el-col :span="12" class="title">◆ 雨伞类型：</el-col>
+            <el-col :span="12" class="title">◆&nbsp;&nbsp;雨伞类型&nbsp;&nbsp;：</el-col>
             <el-col :span="12" class="content">
               <span v-if="detail.type === '1'">长柄伞</span>
               <span v-if="detail.type === '2'">短款折叠伞</span>
@@ -184,22 +257,51 @@
           </el-col>
           <!--雨伞型号-->
           <el-col :span="9">
-            <el-col :span="12" class="title">◆ 雨伞型号：</el-col>
+            <el-col :span="12" class="title">◆&nbsp;&nbsp;雨伞型号&nbsp;&nbsp;：</el-col>
             <el-col :span="12" class="content">{{detail.pattern}}</el-col>
+          </el-col>
+        </el-row>
+        <!--可租借点／正被租用-->
+        <el-row style="padding-top: 20px">
+          <!--可租借点-->
+          <el-col :span="11">
+            <el-col :span="12" class="title">◆ 可租借点：</el-col>
+            <el-col :span="12" class="content">{{detail.rentPoint}}</el-col>
+          </el-col>
+          <!--正被租用-->
+          <el-col :span="9">
+            <el-col :span="12" class="title">◆ 是否被租用：</el-col>
+            <el-col :span="12" class="content">
+              <span v-if="detail.beRented === '0'">否</span>
+              <span v-if="detail.beRented === '1'">是</span>
+            </el-col>
+          </el-col>
+        </el-row>
+        <!--用户的id／被租借次数-->
+        <el-row style="padding-top: 20px">
+          <!--用户的id-->
+          <el-col :span="11">
+            <el-col :span="12" class="title">◆ 用户的id：</el-col>
+            <el-col :span="12" class="content">{{detail.userId}}</el-col>
+          </el-col>
+          <!--被租借次数-->
+          <el-col :span="9">
+            <el-col :span="12" class="title">◆ 被租借次数：</el-col>
+            <el-col :span="12" class="content">{{detail.beRentedNumber}}</el-col>
           </el-col>
         </el-row>
         <!--二维码／雨伞状态-->
         <el-row style="padding-top: 20px;margin-bottom: 20px">
           <!--二维码-->
           <el-col :span="11">
-            <el-col :span="12" class="title">◆&nbsp;&nbsp;&nbsp;二维码&nbsp;&nbsp;：</el-col>
+            <el-col :span="12" class="title">◆&nbsp;&nbsp;二维码&nbsp;&nbsp;：</el-col>
             <el-col :span="12" class="content">
               <qrcode-vue :value="detail.id" size="100" level="H"></qrcode-vue>
             </el-col>
           </el-col>
           <!--雨伞状态-->
           <el-col :span="9">
-            <el-col :span="12" class="title">◆ 雨伞状态：</el-col>
+            <el-col :span="12" class="title">◆&nbsp;&nbsp;雨伞状态&nbsp;&nbsp;：</el-col>
             <el-col :span="12" class="content">
               <span v-if="detail.status === '0'">禁用</span>
               <span v-if="detail.status === '1'">正常</span>
@@ -231,7 +333,7 @@
         // 录入弹窗里的表单
         form: {},
         // 雨伞类型选项
-        typeOptins: [
+        typeOptions: [
           {
             value: '1',
             label: '长柄伞'
@@ -242,7 +344,7 @@
           },
         ],
         // 所在地区选项
-        regionOptins: [
+        regionOptions: [
           {
             value: 'gz',
             label: '广州'
@@ -252,8 +354,26 @@
             label: '深圳'
           },
         ],
+        // 可租借点选项
+        rentPointOptions: [
+          {
+            value: "023",
+            label: "大学城南"
+          }
+        ],
+        // 正被租用选项
+        beRentedOptions: [
+          {
+            value: '0',
+            label: '否'
+          },
+          {
+            value: '1',
+            label: '是'
+          },
+        ],
         // 状态选项
-        statusOptins: [
+        statusOptions: [
           {
             value: '0',
             label: '禁用'
@@ -284,6 +404,18 @@
           region: [
             {required: true, message: '请选择所在地区', trigger: 'change'},
           ],
+          rentPoint: [
+            {required: true, message: '请选择可租借点', trigger: 'change'},
+          ],
+          beRented: [
+            {required: true, message: '请选择是否被租用', trigger: 'change'},
+          ],
+          userId: [
+            {required: true, message: '请填写租用的用户id', trigger: 'blur'},
+          ],
+          beRentedNumber: [
+            {required: true, message: '请填写被租借次数', trigger: 'blur'},
+          ],
           status: [
             {required: true, message: '请选择状态', trigger: 'change'},
           ],
@@ -296,6 +428,10 @@
             pattern: "L123455",
             type: "2",
             region: "广州",
+            rentPoint: "023",
+            beRented: "1",
+            userId: "8008208820",
+            beRentedNumber: 1,
             status: "1",
           },
           {
@@ -303,6 +439,10 @@
             pattern: "S876543",
             type: "1",
             region: "广州",
+            rentPoint: "023",
+            beRented: "1",
+            userId: "8008208820",
+            beRentedNumber: 1,
             status: "2",
           },
           {
@@ -310,6 +450,10 @@
             pattern: "S876543",
             type: "1",
             region: "广州",
+            rentPoint: "023",
+            beRented: "1",
+            userId: "8008208820",
+            beRentedNumber: 1,
             status: "3",
           },
           {
@@ -317,6 +461,10 @@
             pattern: "L123455",
             type: "2",
             region: "深圳",
+            rentPoint: "023",
+            beRented: "1",
+            userId: "8008208820",
+            beRentedNumber: 1,
             status: "1",
           },
           {
@@ -324,6 +472,10 @@
             pattern: "S876543",
             type: "1",
             region: "深圳",
+            rentPoint: "023",
+            beRented: "1",
+            userId: "8008208820",
+            beRentedNumber: 1,
             status: "1",
           },
           {
@@ -331,6 +483,10 @@
             pattern: "S876543",
             type: "1",
             region: "深圳",
+            rentPoint: "023",
+            beRented: "1",
+            userId: "8008208820",
+            beRentedNumber: 1,
             status: "1",
           },
         ],
@@ -354,8 +510,12 @@
           pattern: "",
           type: "",
           region: "",
-          status: "1",
           rentPoint: "",
+          beRented: "0",
+          userId: " ",
+          beRentedNumber: 0,
+          status: "1",
+
         };
         // 打开弹窗
         this.showDialog = true;
