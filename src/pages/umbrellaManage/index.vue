@@ -1,9 +1,32 @@
 <template>
-  <div>
+  <div class="umbrellaContainer">
     <!--标题／操作按钮行-->
     <el-row class="top_row">
       <el-row class="title1">:) 雨伞管理</el-row>
       <el-row class="search">
+        <!--雨伞id-->
+        <el-col class="title2" style="width: 80px;">雨伞id：</el-col>
+        <el-col class="input">
+          <el-input
+            placeholder="请输入雨伞id"
+            prefix-icon="el-icon-search"
+            v-model="searchData.openId">
+          </el-input>
+        </el-col>
+        <!--租借点代号-->
+        <el-col class="title2" style="width: 100px">租借点号码：</el-col>
+        <el-col class="input">
+          <el-input
+            placeholder="请输入租借点号码"
+            prefix-icon="el-icon-search"
+            v-model="searchData.rentPoint">
+          </el-input>
+        </el-col>
+        <!--查询按钮-->
+        <el-col style="width: 80px;margin-left: 20px">
+          <el-button type="primary" size="small" icon="el-icon-search">查询</el-button>
+        </el-col>
+
         <!--雨伞录入按钮-->
         <el-col :span="3" style="float: right;text-align: right;">
           <el-button type="warning" size="small" icon="el-icon-plus" @click="handleAdd">雨伞录入</el-button>
@@ -324,6 +347,11 @@
   export default {
     data() {
       return {
+        // 搜索的数据
+        searchData: {
+          id: "",
+          rentPoint: ""
+        },
         // 是否显示菜单录入弹窗
         showDialog: false,
         // 弹窗类型(1:录入，2:编辑)
@@ -582,12 +610,22 @@
 </script>
 
 <style>
-  .warning {
+  .umbrellaContainer .warning {
     margin-left: 10px;
     padding-top: 5px;
     font-size: 8px;
     line-height: 30px;
     color: #aaa;
     text-align: left;
+  }
+  .umbrellaContainer .title2 {
+    width: 70px;
+    height: 60px;
+    color: #909399;
+    text-align: right;
+  }
+  .umbrellaContainer .input {
+    width: 160px;
+    height: 60px;
   }
 </style>
