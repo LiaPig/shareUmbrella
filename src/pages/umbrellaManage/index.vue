@@ -251,7 +251,7 @@
         <el-button type="warning" @click="formSubmit">确 定</el-button>
       </div>
     </el-dialog>
-    <!--菜单详情弹窗-->
+    <!--查看详情弹窗-->
     <el-dialog title="查看雨伞详情" :visible.sync="showDetail">
       <el-row class="dialogDetail">
         <!--雨伞编号／雨伞类型-->
