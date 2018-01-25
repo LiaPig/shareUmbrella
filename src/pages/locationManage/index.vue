@@ -100,6 +100,83 @@
           </el-table>
         </template>
       </el-row>
+      <!--录入／编辑弹出框-->
+      <el-dialog :title="formTitle" :visible.sync="showDialog">
+        <el-form :model="form" ref="form" label-width="100px" :rules="formRules">
+          <!--租借点代号/租借点名称-->
+          <el-row>
+            <!--租借点代号-->
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="10" style="height: 40px;">
+              <el-form-item label="租借点代号:" prop="rentPoint">
+                <el-input v-model="form.rentPoint" placeholder="请输入租借点代号"></el-input>
+              </el-form-item>
+            </el-col>
+            <!--租借点名称-->
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="10" style="height: 40px;">
+              <el-form-item label="租借点名称:" prop="rentName">
+                <el-input v-model="form.rentName" placeholder="请输入租借点名称"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!--地区/容量-->
+          <el-row style="margin-top: 20px;">
+            <!--地区-->
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="10" style="height: 40px;">
+              <el-form-item label="地区:" prop="region">
+                <el-input v-model="form.region" placeholder="请输入地区"></el-input>
+              </el-form-item>
+            </el-col>
+            <!--容量-->
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="10" style="height: 40px;">
+              <el-form-item label="容量:" prop="capacity">
+                <el-input-number v-model="form.capacity" :min="0" controls-position="right"></el-input-number>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!--可租伞数量/可还伞座量-->
+          <el-row style="margin-top: 20px;">
+            <!--可租伞数量-->
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="10" style="height: 40px;">
+              <el-form-item label="可租伞数量:" prop="beRentedNum">
+                <el-input-number v-model="form.beRentedNum" :min="0" controls-position="right"></el-input-number>
+              </el-form-item>
+            </el-col>
+            <!--可还伞座量-->
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="10" style="height: 40px;">
+              <el-form-item label="可还伞座量:" prop="returnNum">
+                <el-input-number v-model="form.returnNum" :min="0" controls-position="right"></el-input-number>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!--租借点状态-->
+          <el-row style="margin-top: 20px;">
+            <!--租借点状态-->
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="10" style="height: 40px;">
+              <el-form-item label="租借点状态:" prop="status">
+                <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
+                  <el-option
+                    v-for="item in statusOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="showDialog = false">取 消</el-button>
+          <el-button type="warning" @click="formSubmit">确 定</el-button>
+        </div>
+      </el-dialog>
       <!--查看详情弹窗-->
       <el-dialog title="查看租借点详情" :visible.sync="showDetail">
         <el-row class="dialogDetail">
@@ -187,11 +264,95 @@
               showDetail: false,
               // 详情弹窗的数据
               detail: {},
+
+              // 是否显示菜单录入弹窗
+              showDialog: false,
+              // 弹窗类型(1:录入，2:编辑)
+              formType: 1,
+              // 弹窗标题
+              formTitle: "",
+              // 录入弹窗里的表单
+              form: {},
+              // 弹窗里的表单认证
+              formRules: {
+                rentPoint: [
+                  {required: true, message: '请输入租借点代号', trigger: 'blur'},
+                ],
+                rentName: [
+                  {required: true, message: '请选择租借点名称', trigger: 'blur'},
+                ],
+                region: [
+                  {required: true, message: '请选择所在地区', trigger: 'blur'},
+                ],
+                capacity: [
+                  {required: true, message: '请填写容量', trigger: 'blur', type: 'number'},
+                ],
+                beRentedNum: [
+                  {required: true, message: '请填写可租借的雨伞数目', trigger: 'blur', type: 'number'},
+                ],
+                returnNum: [
+                  {required: true, message: '请填写可归还的伞座数目', trigger: 'blur', type: 'number'},
+                ],
+                status: [
+                  {required: true, message: '请选择状态', trigger: 'blur'},
+                ],
+              },
+              // 状态选项
+              statusOptions: [
+                {
+                  value: '0',
+                  label: '禁用'
+                },
+                {
+                  value: '1',
+                  label: '正常'
+                }
+              ],
             };
         },
         methods: {
-          // 点击租借点录入按钮
+          // 点击雨伞录入按钮
           handleAdd() {
+            this.formType = 1;
+            this.formTitle = "租借点录入";
+            this.form = {
+              rentPoint: "",
+              rentName: "",
+              region: "",
+              capacity: 0,
+              beRentedNum: 0,
+              returnNum: 0,
+              status: "1"
+            };
+            // 打开弹窗
+            this.showDialog = true;
+          },
+          // 点击某一行里的编辑按钮
+          handleEdit(data) {
+            this.formType = 2;
+            this.formTitle = "编辑雨伞";
+            this.form = data;
+            // 打开弹窗
+            this.showDialog = true;
+          },
+          // 点击弹窗里的确认按钮(formType,2为编辑)
+          formSubmit() {
+            this.$refs["form"].validate((valid) => {
+              if (valid) {
+                // 1.录入(新增)
+                if (this.formType === 1) {
+                  this.$message.success("录入成功！");
+                }
+                // 2.编辑(修改)
+                else if (this.formType === 2) {
+                  this.$message.success("修改成功！");
+                }
+                // 关闭弹窗
+                this.showDialog = false;
+              } else {
+                return false;
+              }
+            });
 
           },
           // 点击某一行里的删除按钮
@@ -220,6 +381,7 @@
             this.showDetail = true;
             console.log(data)
           },
+
         }
     }
 </script>
@@ -235,4 +397,5 @@
     width: 160px;
     height: 60px;
   }
+
 </style>
