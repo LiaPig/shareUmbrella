@@ -15,8 +15,7 @@
             <el-col :span="9" style="height: 80px;line-height: 80px;color: #67C23A;" :class="{ active1: isActive[0] }">
               <i class="iconfont icon-pengyoufill" style="font-size: 50px;"></i>
             </el-col>
-            <el-col :span="7">&nbsp;</el-col>
-            <el-col :span="8">
+            <el-col :span="15">
               <el-row class="title">用户总数</el-row>
               <el-row class="data">12345</el-row>
             </el-col>
@@ -31,8 +30,7 @@
             <el-col :span="9" style="height: 80px;line-height: 80px;color: red;" :class="{ active2: isActive[1] }">
               <i class="iconfont icon-yusanjiehuan" style="font-size: 50px;"></i>
             </el-col>
-            <el-col :span="7">&nbsp;</el-col>
-            <el-col :span="8">
+            <el-col :span="15">
               <el-row class="title">雨伞总数</el-row>
               <el-row class="data" style="color: red;">67890</el-row>
             </el-col>
@@ -47,9 +45,9 @@
             <el-col :span="9" style="height: 80px;line-height: 80px;color: #409EFF;" :class="{ active3: isActive[2] }">
               <i class="iconfont icon-wxbmingxingdianpu" style="font-size: 50px;"></i>
             </el-col>
-            <el-col :span="7">&nbsp;</el-col>
-            <el-col :span="8">
-              <el-row class="title">租借点数量</el-row>
+            <!--<el-col :span="">&nbsp;</el-col>-->
+            <el-col :span="15">
+              <el-row class="title">租借点总数</el-row>
               <el-row class="data" style="color: #409EFF;">66666</el-row>
             </el-col>
           </el-card>
@@ -157,7 +155,7 @@
     height: 40px;
     line-height: 60px;
     font-size: 16px;
-    text-align: center;
+    text-align: right;
   }
 
   .box-card .data {
@@ -165,7 +163,7 @@
     line-height: 30px;
     color: #67C23A;
     font-size: 18px;
-    text-align: center;
+    text-align: right;
   }
 
 </style>
