@@ -7,6 +7,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import ElementUI from 'element-ui'
 // import Vuex from 'vuex'
 import store from './store'
+import axios from 'axios'
 
 import VueQuillEditor from 'vue-quill-editor'
 
@@ -16,8 +17,10 @@ Vue.use(ElementUI);
 Vue.use(store);
 
 
-
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+// Vue.prototype.$http = axios;
+Vue.prototype.$http = axios
+// Vue.http = axios
 
 /* eslint-disable no-new */
 new Vue({

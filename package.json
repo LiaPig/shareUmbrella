@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@xkeshi/vue-qrcode": "github:xkeshi/vue-qrcode",
+    "axios": "^0.17.1",
     "element-ui": "^2.0.7",
     "iconfont": "^0.3.1",
     "qrcode.js": "0.0.1",

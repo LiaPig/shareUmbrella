@@ -73,7 +73,7 @@ export default {
   .lia_table {
     margin-top: 20px;
     width: 94%;
-    height: 550px;
+    height: 500px;
     padding: 10px 10px 10px 10px;
     overflow: auto;
     margin-left: 3%;
