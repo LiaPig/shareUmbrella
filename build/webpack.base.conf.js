@@ -38,7 +38,8 @@ module.exports = {
       '@': resolve('src'),
       'Components': path.resolve(__dirname, '../src/components'),
       'Pages': path.resolve(__dirname, '../src/pages'),
-      'Assets': path.resolve(__dirname, '../src/assets')
+      'Assets': path.resolve(__dirname, '../src/assets'),
+      'Api': path.resolve(__dirname, '../src/api'),
     }
   },
   module: {
