@@ -10,8 +10,9 @@ const user = () => import('Pages/userManage/index.vue');
 const addUser = () => import('Pages/userManage/add/index.vue');
 const editUser = () => import('Pages/userManage/edit/index.vue');
 const menu = () => import('Pages/menuManage/index.vue');
-const umbrella = () => import('Pages/umbrellaManage/index.vue')
+const umbrella = () => import('Pages/umbrellaManage/index.vue');
 const location = () => import('Pages/locationManage/index.vue');
+const order = () => import('Pages/orderManage/index.vue');
 
 
 const test = () => import('Pages/test.vue');
@@ -96,6 +97,15 @@ const routes = [
         path: '/location',
         name: 'location',
         component: location,
+        meta: {
+          requiresAuth: true
+        }
+      },
+      // 订单管理
+      {
+        path: '/order',
+        name: 'order',
+        component: order,
         meta: {
           requiresAuth: true
         }
