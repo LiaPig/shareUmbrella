@@ -39,49 +39,13 @@
 </template>
 
 <script>
-
+  import {getMenus} from 'Api/menu'
   import { mapGetters } from 'vuex'
 
   export default {
     data() {
       return {
-        menuList: [
-          {
-            key: 1,
-            path: '/home',
-            icon: 'iconfont icon-shouye',
-            title: '首页',
-            children: null
-          },
-          {
-            key: 2,
-            path: '/user',
-            icon: 'iconfont icon-pengyou',
-            title: '用户管理',
-            children: null
-          },
-          {
-            key: 3,
-            path: '/menu',
-            icon: 'iconfont icon-leimu',
-            title: '菜单管理',
-            children: null
-          },
-          {
-            key: 4,
-            path: '/umbrella',
-            icon: 'iconfont icon-yusan1',
-            title: '雨伞管理',
-            children: null
-          },
-          {
-            key: 5,
-            path: '/location',
-            icon: 'iconfont icon-dianpu',
-            title: '租借点管理',
-            children: null
-          },
-        ],
+        menuList: [],
       };
     },
     methods: {
@@ -95,6 +59,16 @@
         // 导航条是否收起
         'isCollapse'
       ]),
+    },
+    mounted() {
+      this.$http.get(getMenus)
+        .then(res => {
+          this.menuList = res.data.data;
+          console.log(res.data.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
   }
 

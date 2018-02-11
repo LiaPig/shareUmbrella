@@ -170,6 +170,8 @@
 </template>
 
 <script>
+  import {addMenu, getMenus} from 'Api/menu'
+
   export default {
     data() {
       return {
@@ -252,6 +254,19 @@
       };
     },
     methods: {
+      // 获取表格数据
+      getTableData() {
+        this.$http.get(getMenus)
+          .then(res => {
+            if (res.data.code === 20000) {
+              this.tableData = res.data.data;
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        ;
+      },
       // 点击菜单录入按钮
       handleAdd() {
         this.formType = 1;
@@ -280,7 +295,16 @@
           if (valid) {
             // 1.录入(新增)
             if (this.formType === 1) {
-              this.$message.success("录入成功！");
+              let params = this.form;
+              this.$http.post(addMenu, params).then(res => {
+                if (res.data.code === 20000) {
+                  this.$message.success("录入成功！");
+                }
+              })
+                .catch(function (error) {
+                  console.log(error);
+                });
+
             }
             // 2.编辑(修改)
             else if (this.formType === 2) {
@@ -320,6 +344,9 @@
         this.showDetail = true;
         console.log(data)
       }
+    },
+    mounted() {
+      this.getTableData();
     }
   }
 </script>
