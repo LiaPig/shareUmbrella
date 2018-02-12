@@ -133,7 +133,7 @@
             <el-col :span="1">&nbsp;</el-col>
             <el-col :span="10" style="height: 40px;">
               <el-form-item label="容量:" prop="capacity">
-                <el-input-number v-model="form.capacity" :min="0" controls-position="right"></el-input-number>
+                <el-input-number v-model="form.capacity" :min="0" controls-position="right" style="width: 100%"></el-input-number>
               </el-form-item>
             </el-col>
           </el-row>
@@ -143,14 +143,14 @@
             <el-col :span="1">&nbsp;</el-col>
             <el-col :span="10" style="height: 40px;">
               <el-form-item label="可租伞数量:" prop="beRentedNum">
-                <el-input-number v-model="form.beRentedNum" :min="0" controls-position="right"></el-input-number>
+                <el-input-number v-model="form.beRentedNum" :min="0" controls-position="right" style="width: 100%"></el-input-number>
               </el-form-item>
             </el-col>
             <!--可还伞座量-->
             <el-col :span="1">&nbsp;</el-col>
             <el-col :span="10" style="height: 40px;">
               <el-form-item label="可还伞座量:" prop="returnNum">
-                <el-input-number v-model="form.returnNum" :min="0" controls-position="right"></el-input-number>
+                <el-input-number v-model="form.returnNum" :min="0" controls-position="right" style="width: 100%"></el-input-number>
               </el-form-item>
             </el-col>
           </el-row>
