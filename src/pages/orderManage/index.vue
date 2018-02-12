@@ -1,49 +1,156 @@
 <template>
-    <div>
+    <div class="orderContainer">
       <!--标题／操作按钮行-->
       <el-row class="top_row">
         <el-row class="title1">:) 订单管理</el-row>
         <el-row class="search">
+          <!--租借点id-->
+          <el-col class="title2" style="width: 80px;">租借点id：</el-col>
+          <el-col class="input">
+            <el-input
+              placeholder="请输入租借点id"
+              prefix-icon="el-icon-search"
+              v-model="searchData.id">
+            </el-input>
+          </el-col>
+          <!--租借点名称-->
+          <el-col class="title2" style="width: 100px">租借点名称：</el-col>
+          <el-col class="input">
+            <el-input
+              placeholder="请输入租借点名称"
+              prefix-icon="el-icon-search"
+              v-model="searchData.rentName">
+            </el-input>
+          </el-col>
+          <!--查询按钮-->
+          <el-col style="width: 80px;margin-left: 20px">
+            <el-button @click="handleSearch" type="primary" size="small" icon="el-icon-search" style="height: 40px">查询</el-button>
+          </el-col>
+          <!--重置按钮-->
+          <el-col style="width: 80px;margin-left: 10px;margin-top: 2px">
+            <el-button @click="handleReset" type="warning" size="small" style="height: 40px" icon="iconfont icon-chexiao">&nbsp;重置</el-button>
+          </el-col>
           <!--订单录入按钮-->
+          <!--
           <el-col :span="3" style="float: right;text-align: right;">
             <el-button type="warning" size="small" icon="el-icon-plus" @click="handleAdd">订单录入</el-button>
           </el-col>
+          -->
         </el-row>
       </el-row>
+      <!--菜单管理表格-->
+      <el-row class="lia_table" v-loading="tableLoading" element-loading-text="拼命加载中">
+        <template style="">
+          <el-table
+            :data="tableData"
+            border
+            style="width: 100%">
+            <el-table-column
+              type="index"
+              width="80">
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="id"
+              label="订单id"
+              width="200">
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="rentName"
+              label="租借点名"
+              width="150">
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="returnName"
+              label="归还点名"
+              width="150">
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="nickName"
+              label="租借人姓名"
+              width="150">
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="startTime"
+              label="开始时间"
+              width="200">
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="endTime"
+              label="结束时间"
+              width="200">
+            </el-table-column>
+            <el-table-column
+              sortable
+              prop="const"
+              label="费用(元)"
+              width="150">
+            </el-table-column>
+            <el-table-column
+              sortable
+              label="状态"
+              width="120">
+              <template slot-scope="scope">
+                <span v-if="scope.row.status === '1'">进行中</span>
+                <span v-else-if="scope.row.status === '2'">已完成</span>
+                <span v-else>禁用</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              fixed="right"
+              label="操作"
+              width="250">
+              <template slot-scope="scope">
+                <el-button @click="handleDelete(scope.row)" type="danger" size="small">删除</el-button>
+                <el-button @click="handleEdit(scope.row)" type="primary" plain size="small" style="margin-left: 1px">编辑
+                </el-button>
+                <el-button @click="handleDetail(scope.row)" type="warning" plain size="small" style="margin-left: 1px">
+                  查看详情
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </template>
+      </el-row>
       <!--弹出框-->
-      <el-dialog :title="formTitle" :visible.sync="showDialog">
+      <el-dialog :title="formTitle" :visible.sync="showDialog" width="65%">
         <el-form :model="form" ref="form" label-width="100px" :rules="formRules">
-          <!--租借点代号/租借点名称-->
+          <!--租借点id/租借点名称-->
           <el-row>
-            <!--租借点代号-->
+            <!--租借点id-->
             <el-col :span="1">&nbsp;</el-col>
             <el-col :span="10" style="height: 40px;">
-              <el-form-item label="租借点代号:" prop="rentPoint">
-                <el-input v-model="form.rentPoint" placeholder="请输入租借点代号"></el-input>
+              <el-form-item label="租借点id:" prop="rentPointId">
+                <el-input v-model="form.rentPointId" placeholder="请输入租借点id"></el-input>
               </el-form-item>
             </el-col>
-            <!--租借点名称-->
+            <!--租借点名-->
             <el-col :span="1">&nbsp;</el-col>
             <el-col :span="10" style="height: 40px;">
-              <el-form-item label="租借点名称:" prop="rentName">
-                <el-input v-model="form.rentName" placeholder="请输入租借点名称"></el-input>
+              <el-form-item label="租借点名:" prop="rentName">
+                <el-input v-model="form.rentName" placeholder="请输入租借点名"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
-          <!--归还点代号/归还点名称-->
+          <!--归还点id/归还点名-->
           <el-row style="margin-top: 10px">
             <!--归还点代号-->
             <el-col :span="1">&nbsp;</el-col>
             <el-col :span="10" style="height: 40px;">
-              <el-form-item label="归还点代号:">
-                <el-input v-model="form.returnPoint" placeholder="请输入归还点代号"></el-input>
+              <el-form-item label="归还点id:">
+                <el-input v-model="form.returnPointId" placeholder="请输入归还点id"></el-input>
               </el-form-item>
             </el-col>
-            <!--归还点名称-->
+            <!--归还点名-->
             <el-col :span="1">&nbsp;</el-col>
             <el-col :span="10" style="height: 40px;">
-              <el-form-item label="归还点名称:">
-                <el-input v-model="form.returnName" placeholder="请输入归还点名称"></el-input>
+              <el-form-item label="归还点名:">
+                <el-input v-model="form.returnName" placeholder="请输入归还点名"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -54,6 +161,50 @@
             <el-col :span="10" style="height: 40px;">
               <el-form-item label="租借人id:" prop="userId">
                 <el-input v-model="form.userId" placeholder="请输入租借人id"></el-input>
+              </el-form-item>
+            </el-col>
+            <!--租借人名-->
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="10" style="height: 40px;">
+              <el-form-item label="租借人名:" prop="userId">
+                <el-input v-model="form.nickName" placeholder="请输入租借人的用户名"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!--开始时间/结束时间-->
+          <el-row style="margin-top: 10px">
+            <!--开始时间-->
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="10" style="height: 40px;">
+              <el-form-item label="开始时间:">
+                <el-date-picker
+                  v-model="startTime"
+                  type="datetime"
+                  placeholder="选择开始时间"
+                  style="width: 100%">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+            <!--结束时间-->
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="10" style="height: 40px;">
+              <el-form-item label="结束时间:">
+                <el-date-picker
+                  v-model="endTime"
+                  type="datetime"
+                  placeholder="选择结束时间"
+                  style="width: 100%">
+                </el-date-picker>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!--订单费用/订单状态-->
+          <el-row style="margin-top: 10px">
+            <!--订单费用-->
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="10" style="height: 40px;">
+              <el-form-item label="订单费用:" prop="cost">
+                <el-input v-model="form.cost" placeholder="请输入订单费用"></el-input>
               </el-form-item>
             </el-col>
             <!--订单状态-->
@@ -71,34 +222,8 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <!--开始时间-->
-          <el-row style="margin-top: 10px">
-            <el-col :span="1">&nbsp;</el-col>
-            <el-col :span="13" style="height: 40px;">
-              <el-form-item label="开始时间:">
-                <el-date-picker
-                  v-model="startTime"
-                  type="datetime"
-                  placeholder="选择开始时间"
-                  style="width: 100%">
-                </el-date-picker>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <!--结束时间-->
-          <el-row style="margin-top: 10px">
-            <el-col :span="1">&nbsp;</el-col>
-            <el-col :span="13" style="height: 40px;">
-              <el-form-item label="结束时间:">
-                <el-date-picker
-                  v-model="endTime"
-                  type="datetime"
-                  placeholder="选择结束时间"
-                  style="width: 100%">
-                </el-date-picker>
-              </el-form-item>
-            </el-col>
-          </el-row>
+
+
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="showDialog = false">取 消</el-button>
@@ -113,6 +238,31 @@
         name: "index",
       data() {
           return {
+            // 查询的数据
+            searchData: {
+              id: "",
+              rentName: ""
+            },
+
+            // 表格数据
+            tableData: [
+              {
+                id: "480285857631178756",
+                rentPointId: "480285857631178757",
+                rentName: "大学城北",
+                returnPointId: "480285857631178758",
+                returnName: "大学城南",
+                userId: "480285857631178755",
+                nickName: "LeeWaiHo",
+                startTime: "2018-02-12 23:46:21",
+                endTime: "2018-02-14 23:46:21",
+                cost: "2.00",
+                status: "2"
+              }
+            ],
+            // 表格的loading
+            tableLoading: false,
+
             // 是否显示菜单录入弹窗
             showDialog: false,
             // 弹窗类型(1:录入，2:编辑)
@@ -164,12 +314,68 @@
           }
       },
       methods: {
+        // 点击查询按钮
+        handleSearch() {
+          if(!this.searchData.id && !this.searchData.rentName) {
+            this.$message.warning("请先填写数据再查询!");
+          }
+        },
+        // 点击重置按钮
+        handleReset() {
+          this.searchData = {
+            id: "",
+            rentName: ""
+          };
+          // 重新获取所有数据
+
+        },
+        // 点击某一行里的编辑按钮
+        handleEdit(data) {
+          this.formType = 2;
+          this.formTitle = "编辑订单";
+          this.form = data;
+          this.startTime = new Date(data.startTime);
+          this.endTime = new Date(data.endTime);
+          // 打开弹窗
+          this.showDialog = true;
+        },
+        // 点击某一行里的删除按钮
+        handleDelete(data) {
+          const that = this;
+          that.$confirm('此操作将删除该订单, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+              that.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+            // that.$http.delete(deleteMenu + data.id)
+            //   .then(res => {
+            //     that.$message({
+            //       type: 'success',
+            //       message: '删除成功!'
+            //     });
+            //     that.getTableData();
+            //   })
+            //   .catch(err => {
+            //     console.error(err);
+            //   });
+          }).catch(() => {
+            that.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
+        },
+
         // 点击菜单录入按钮
         handleAdd() {
           this.formType = 1;
           this.formTitle = "订单录入";
           this.form = {
-            rentPoint: "",
+            rentPointId: "",
             rentName: "",
             returnPoint: "",
             returnName: "",
@@ -211,5 +417,14 @@
 </script>
 
 <style scoped>
-
+  .orderContainer .title2 {
+    width: 70px;
+    height: 60px;
+    color: #909399;
+    text-align: right;
+  }
+  .orderContainer .input {
+    width: 200px;
+    height: 60px;
+  }
 </style>
