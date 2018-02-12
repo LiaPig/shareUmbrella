@@ -108,7 +108,6 @@
         this.$http.get(getUsers)
           .then(res => {
             this.users = res.data.data.length;
-            console.log(res)
           })
           .catch(error => {
             console.error(error);
