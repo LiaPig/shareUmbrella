@@ -170,7 +170,7 @@
 </template>
 
 <script>
-  import {addMenu, getMenus, deleteMenu} from 'Api/menu'
+  import {addMenu, getMenus, deleteMenu, updateMenu} from 'Api/menu'
 
   export default {
     data() {
@@ -259,20 +259,36 @@
             // 1.录入(新增)
             if (this.formType === 1) {
               let params = this.form;
-              this.$http.post(addMenu, params).then(res => {
-                if (res.data.code === 20000) {
-                  this.$message.success("录入成功！");
-                  this.getTableData();
-                }
-              })
+              this.$http.post(addMenu, params)
+                .then(res => {
+                  if (res.data.code === 20000) {
+                    this.$message.success("录入成功！");
+                    this.getTableData();
+                  }
+                })
                 .catch(function (error) {
                   console.error(error);
                 });
-
             }
             // 2.编辑(修改)
             else if (this.formType === 2) {
-              this.$message.success("修改成功！");
+              let params = {
+                id: this.form.id,
+                title: this.form.title,
+                path: this.form.path,
+                key: this.form.key,
+                icon: this.form.icon
+              };
+              this.$http.post(updateMenu, params)
+                .then(res => {
+                  if (res.data.code === 20000) {
+                    this.$message.success("修改成功！");
+                    this.getTableData();
+                  }
+                })
+                .catch(function (error) {
+                  console.error(error);
+                });
             }
             // 关闭弹窗
             this.showDialog = false;
