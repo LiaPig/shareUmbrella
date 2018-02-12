@@ -11,7 +11,7 @@
       </el-row>
     </el-row>
     <!--菜单管理表格-->
-    <el-row class="lia_table">
+    <el-row class="lia_table" v-loading="tableLoading" element-loading-text="拼命加载中">
       <template style="">
         <el-table
           :data="tableData"
@@ -205,48 +205,9 @@
         },
 
         // 表格数据
-        tableData: [
-          {
-            id: "123456",
-            key: 1,
-            path: '/home',
-            icon: 'iconfont icon-shouye',
-            title: '首页',
-            status: "1",
-          },
-          {
-            id: "123456",
-            key: 2,
-            path: '/user',
-            icon: 'iconfont icon-pengyou',
-            title: '用户管理',
-            status: "1",
-          },
-          {
-            id: "123456",
-            key: 3,
-            path: '/menu',
-            icon: 'iconfont icon-leimu',
-            title: '菜单管理',
-            status: "1",
-          },
-          {
-            id: "123456",
-            key: 4,
-            path: '/umbrella',
-            icon: 'iconfont icon-yusan1',
-            title: '雨伞管理',
-            status: "1",
-          },
-          {
-            id: "123456",
-            key: 5,
-            path: '/location',
-            icon: 'iconfont icon-dianpu',
-            title: '租借点管理',
-            status: "1",
-          },
-        ],
+        tableData: [],
+        // 表格的loading
+        tableLoading: false,
         // 是否显示详情弹窗
         showDetail: false,
         // 详情弹窗的数据
@@ -256,10 +217,12 @@
     methods: {
       // 获取表格数据
       getTableData() {
+        this.tableLoading = true;
         this.$http.get(getMenus)
           .then(res => {
             if (res.data.code === 20000) {
               this.tableData = res.data.data;
+              this.tableLoading = false;
             }
           })
           .catch(function (error) {
