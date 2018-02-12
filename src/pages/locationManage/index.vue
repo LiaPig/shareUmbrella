@@ -27,7 +27,7 @@
             <el-button type="primary" size="small" icon="el-icon-search">查询</el-button>
           </el-col>
 
-          <!--雨伞录入按钮-->
+          <!--租借点录入按钮-->
           <el-col :span="3" style="float: right;text-align: right;">
             <el-button type="warning" size="small" icon="el-icon-plus" @click="handleAdd">租借点录入</el-button>
           </el-col>
@@ -311,7 +311,7 @@
             };
         },
         methods: {
-          // 点击雨伞录入按钮
+          // 点击租借点录入按钮
           handleAdd() {
             this.formType = 1;
             this.formTitle = "租借点录入";
@@ -330,7 +330,7 @@
           // 点击某一行里的编辑按钮
           handleEdit(data) {
             this.formType = 2;
-            this.formTitle = "编辑雨伞";
+            this.formTitle = "编辑租借点";
             this.form = data;
             // 打开弹窗
             this.showDialog = true;
