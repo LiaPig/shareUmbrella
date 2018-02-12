@@ -170,7 +170,7 @@
 </template>
 
 <script>
-  import {addMenu, getMenus} from 'Api/menu'
+  import {addMenu, getMenus, deleteMenu} from 'Api/menu'
 
   export default {
     data() {
@@ -226,7 +226,7 @@
             }
           })
           .catch(function (error) {
-            console.log(error);
+            console.error(error);
           });
         ;
       },
@@ -262,10 +262,11 @@
               this.$http.post(addMenu, params).then(res => {
                 if (res.data.code === 20000) {
                   this.$message.success("录入成功！");
+                  this.getTableData();
                 }
               })
                 .catch(function (error) {
-                  console.log(error);
+                  console.error(error);
                 });
 
             }
@@ -289,10 +290,17 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          that.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
+          that.$http.delete(deleteMenu + data.id)
+            .then(res => {
+              that.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+              that.getTableData();
+            })
+            .catch(err => {
+              console.error(err);
+            });
         }).catch(() => {
           that.$message({
             type: 'info',
@@ -305,7 +313,6 @@
         this.detail = data;
         // 打开弹窗
         this.showDetail = true;
-        console.log(data)
       }
     },
     mounted() {
