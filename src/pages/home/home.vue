@@ -17,7 +17,7 @@
             </el-col>
             <el-col :span="15">
               <el-row class="title">用户总数</el-row>
-              <el-row class="data">12345</el-row>
+              <el-row class="data">{{users}}</el-row>
             </el-col>
           </el-card>
         </div>
@@ -68,6 +68,7 @@
 
 <script>
   import ElCol from "element-ui/packages/col/src/col";
+  import {getUsers} from 'Api/user'
 
   export default {
     components: {ElCol},
@@ -81,10 +82,14 @@
           '../../../src/assets/pictures/home/carousel/5.jpeg',
         ],
         value2: "",
-        isActive: [false]
+        isActive: [false],
+
+        // 用户总数
+        users: 0,
       };
     },
     methods: {
+      // 切换导航的图标和类
       changeIconClass(flag, index) {
         let isActive = this.isActive;
         if (flag) {
@@ -97,7 +102,21 @@
           this.isActive = [];
           this.isActive = isActive;
         }
+      },
+      // 获取用户信息
+      getUserData() {
+        this.$http.get(getUsers)
+          .then(res => {
+            this.users = res.data.data.length;
+            console.log(res)
+          })
+          .catch(error => {
+            console.error(error);
+          })
       }
+    },
+    mounted() {
+      this.getUserData();
     }
   }
 </script>
@@ -141,10 +160,12 @@
     background-color: #67C23A;
     color: #ffffff !important;
   }
+
   .active2 {
     background-color: red;
     color: #ffffff !important;
   }
+
   .active3 {
     background-color: #409EFF;
     color: #ffffff !important;
