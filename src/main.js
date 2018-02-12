@@ -5,9 +5,9 @@ import App from './App'
 import router from './router'
 import 'element-ui/lib/theme-chalk/index.css'
 import ElementUI from 'element-ui'
-// import Vuex from 'vuex'
 import store from './store'
 import axios from 'axios'
+import util from './common/js/util'
 
 import VueQuillEditor from 'vue-quill-editor'
 
@@ -18,9 +18,10 @@ Vue.use(store);
 
 
 Vue.config.productionTip = false;
-// Vue.prototype.$http = axios;
-Vue.prototype.$http = axios
-// Vue.http = axios
+// 更改原型(加入到原型属性中)
+Vue.prototype.$http = axios;
+Vue.prototype.baseJs = util;
+
 
 /* eslint-disable no-new */
 new Vue({
