@@ -64,10 +64,10 @@
       this.$http.get(getMenus)
         .then(res => {
           this.menuList = res.data.data;
-          console.log(res.data.data);
+          // console.log(res.data.data);
         })
         .catch(function (error) {
-          console.log(error);
+          console.error(error);
         });
     }
   }
