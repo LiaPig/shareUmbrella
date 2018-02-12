@@ -19,21 +19,6 @@
     <el-row class="form">
       <el-col :span="24">
         <el-form :model="editForm" :rules="rules" ref="editForm" label-width="100px" class="demo-ruleForm">
-          <!--用户的id／开发者id-->
-          <el-row>
-            <el-col :span="2">&nbsp;</el-col>
-            <el-col :span="9">
-              <el-form-item label="用户的id：" prop="id">
-                <el-input v-model="editForm.id" :disabled="true"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="1">&nbsp;</el-col>
-            <el-col :span="9">
-              <el-form-item label="开发者id：" prop="openId">
-                <el-input v-model="editForm.openId" :disabled="true"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
           <!--微信名称／所在城市-->
           <el-row>
             <el-col :span="2">&nbsp;</el-col>
@@ -70,9 +55,15 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <!--性别/状态-->
+          <!--用户的id／性别-->
           <el-row>
             <el-col :span="2">&nbsp;</el-col>
+            <el-col :span="9">
+              <el-form-item label="用户的id：" prop="id">
+                <el-input v-model="editForm.id" :disabled="true"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="1">&nbsp;</el-col>
             <el-col :span="9">
               <el-form-item label="性别：" prop="gender">
                 <el-select v-model="editForm.gender" :disabled="true" style="width: 100%">
@@ -83,6 +74,30 @@
                     :value="item.value">
                   </el-option>
                 </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!--租借次数/押金-->
+          <el-row>
+            <el-col :span="2">&nbsp;</el-col>
+            <el-col :span="9">
+              <el-form-item label="租借次数：" prop="usageCount">
+                <el-input v-model="editForm.usageCount"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="1">&nbsp;</el-col>
+            <el-col :span="9">
+              <el-form-item label="押金：" prop="deposit">
+                <el-input v-model="editForm.deposit"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!--余额／状态-->
+          <el-row>
+            <el-col :span="2">&nbsp;</el-col>
+            <el-col :span="9">
+              <el-form-item label="余额：" prop="balance">
+                <el-input v-model="editForm.balance"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="1">&nbsp;</el-col>
@@ -99,21 +114,6 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <!--押金／租借次数-->
-          <el-row>
-            <el-col :span="2">&nbsp;</el-col>
-            <el-col :span="9">
-              <el-form-item label="押金：" prop="deposit">
-                <el-input v-model="editForm.deposit"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="1">&nbsp;</el-col>
-            <el-col :span="9">
-              <el-form-item label="租借次数：" prop="usageCount">
-                <el-input v-model="editForm.usageCount"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
         </el-form>
       </el-col>
     </el-row>
@@ -121,6 +121,7 @@
 </template>
 
 <script>
+  import {updateUser} from 'Api/user'
   export default {
     data() {
       // 自定义的确认两次密码是否相同函数
@@ -175,6 +176,9 @@
           usageCount: [
             {required: true, message: '租借次数不能为空', trigger: 'blur'},
           ],
+          balance: [
+            {required: true, message: '余额不能为空', trigger: 'blur'},
+          ],
           status: [
             {required: true, message: '请选择状态', trigger: 'change'}
           ]
@@ -191,7 +195,24 @@
         const that = this;
         that.$refs.editForm.validate((valid) => {
           if (valid) {
-            this.$message.success("点击提交了哦");
+            let params = {
+              id: that.editForm.id,
+              deposit: Number(that.editForm.deposit),
+              balance: Number(that.editForm.balance),
+              usageCount: Number(that.editForm.usageCount),
+              status: that.editForm.status,
+            };
+            that.$http.post(updateUser,params)
+              .then(res => {
+                // console.log(res)
+                this.$message.success("修改成功！");
+                that.handleCancel();
+              })
+              .catch(err => {
+                console.error(err)
+              });
+
+            console.log(params)
           } else {
             this.$message.warning("提交失败，请检查填写是否符合条件");
             return false;

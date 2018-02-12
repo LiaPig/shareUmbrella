@@ -5,12 +5,12 @@
       <el-row class="title1">:) 用户管理</el-row>
       <el-row class="search">
         <!--开发者平台ID-->
-        <el-col class="title2" style="width: 120px;">开发者平台ID：</el-col>
+        <el-col class="title2" style="width: 80px;">用户ID：</el-col>
         <el-col class="input">
           <el-input
-            placeholder="请输入openId"
+            placeholder="请输入用户id"
             prefix-icon="el-icon-search"
-            v-model="searchData.openId">
+            v-model="searchData.id">
           </el-input>
         </el-col>
         <!--用户名-->
@@ -29,7 +29,7 @@
       </el-row>
     </el-row>
     <!--用户管理表格-->
-    <el-row class="lia_table">
+    <el-row class="lia_table" v-loading="tableLoading" element-loading-text="拼命加载中">
       <template style="">
         <el-table
           :data="tableData"
@@ -41,8 +41,8 @@
           </el-table-column>
           <el-table-column
             sortable
-            prop="openId"
-            label="开发者平台ID"
+            prop="id"
+            label="用户ID"
             width="200">
           </el-table-column>
           <el-table-column
@@ -69,6 +69,12 @@
           </el-table-column>
           <el-table-column
             sortable
+            prop="balance"
+            label="余额(元)"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            sortable
             prop="usageCount"
             label="租借次数"
             width="120">
@@ -87,7 +93,6 @@
               <el-button v-popover:popover1 size="small">点击查看</el-button>
             </template>
           </el-table-column>
-
           <el-table-column
             sortable
             prop="city"
@@ -133,7 +138,7 @@
     <!--用户详情弹窗-->
     <el-dialog title="查看用户详情" :visible.sync="showDetail">
       <el-row class="dialogDetail">
-        <!--微信头像／微信ID-->
+        <!--微信头像／用户id-->
         <el-row style="padding-top: 30px">
           <!--微信头像-->
           <el-col :span="11">
@@ -144,8 +149,8 @@
           </el-col>
           <!--微信ID-->
           <el-col :span="9">
-            <el-col :span="12" class="title">◆ 微信&nbsp;&nbsp;ID&nbsp;：</el-col>
-            <el-col :span="12" class="content">{{detail.openId}}</el-col>
+            <el-col :span="12" class="title">◆ 用户&nbsp;&nbsp;ID&nbsp;：</el-col>
+            <el-col :span="12" class="content">{{detail.id}}</el-col>
           </el-col>
         </el-row>
         <!--微信名称／性别-->
@@ -164,6 +169,14 @@
             </el-col>
           </el-col>
         </el-row>
+        <!--国家地区／微信ID-->
+        <el-row style="padding-top: 20px">
+          <!--国家地区-->
+          <el-col :span="22">
+            <el-col :span="6" class="title">◆ 国家地区：</el-col>
+            <el-col :span="16" class="content">{{detail.country+ " " + detail.province+ " " +detail.city}}</el-col>
+          </el-col>
+        </el-row>
         <!--押金金额／租借次数-->
         <el-row style="padding-top: 20px">
           <!--押金金额-->
@@ -177,19 +190,17 @@
             <el-col :span="12" class="content">{{detail.usageCount}}&nbsp;次</el-col>
           </el-col>
         </el-row>
-        <!--国家地区／微信ID-->
-        <el-row style="padding-top: 20px">
-          <!--国家地区-->
-          <el-col :span="22">
-            <el-col :span="6" class="title">◆ 国家地区：</el-col>
-            <el-col :span="16" class="content">{{detail.country+ " " + detail.province+ " " +detail.city}}</el-col>
-          </el-col>
-        </el-row>
-        <!--状态-->
+        <!--余额/状态-->
         <el-row style="padding-top: 20px;padding-bottom: 30px;">
-          <el-col :span="22">
-            <el-col :span="6" class="title">◆ 状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态&nbsp;：</el-col>
-            <el-col :span="16" class="content">
+          <!--押金金额-->
+          <el-col :span="11">
+            <el-col :span="12" class="title">◆ 余&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;额&nbsp;：</el-col>
+            <el-col :span="12" class="content">{{detail.balance}}&nbsp;元</el-col>
+          </el-col>
+          <!--租借次数-->
+          <el-col :span="9">
+            <el-col :span="12" class="title">◆ 状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态&nbsp;：</el-col>
+            <el-col :span="12" class="content">
               <span v-if="detail.status === '1'" style="color: #E6A23C">正常</span>
               <span v-else style="color: #F56C6C">禁用</span>
             </el-col>
@@ -204,131 +215,20 @@
 </template>
 
 <script>
+  import {getUsers,deleteUser} from "Api/user";
+
   export default {
     data() {
       return {
         // 搜索框的数据
         searchData: {
-          openId: "",
+          id: "",
           nickName: ""
         },
         // 表格数据
-        tableData: [
-          {
-            id: "1",
-            openId: "8008208820",
-            nickName: "Lia黄丽雅",
-            avatarUrl: "https://wx.qlogo.cn/mmopen/vi_32/d9ZyJzoqENWX6bmqJee1ZwONZYY01wib2KAIibT1KQIZhIBdnRGtg4bicMbb7Eia809lSIUNOyWHvr9iaPjTnrjWx0Q/0",
-            city: "Guangzhou",
-            province: "Guangdong",
-            country: "China",
-            gender: 2,
-            deposit: 200,
-            usageCount: 1,
-            status: "1"
-          },
-          {
-            id: "2",
-            openId: "8008208820",
-            nickName: "Lia黄丽雅",
-            avatarUrl: "https://wx.qlogo.cn/mmopen/vi_32/d9ZyJzoqENWX6bmqJee1ZwONZYY01wib2KAIibT1KQIZhIBdnRGtg4bicMbb7Eia809lSIUNOyWHvr9iaPjTnrjWx0Q/0",
-            city: "Guangzhou",
-            province: "Guangdong",
-            country: "China",
-            gender: 2,
-            deposit: 200,
-            usageCount: 1,
-            status: "1"
-          },
-          {
-            id: "3",
-            openId: "8008208820",
-            nickName: "Lia黄丽雅",
-            avatarUrl: "https://wx.qlogo.cn/mmopen/vi_32/d9ZyJzoqENWX6bmqJee1ZwONZYY01wib2KAIibT1KQIZhIBdnRGtg4bicMbb7Eia809lSIUNOyWHvr9iaPjTnrjWx0Q/0",
-            city: "Guangzhou",
-            province: "Guangdong",
-            country: "China",
-            gender: 2,
-            deposit: 200,
-            usageCount: 1,
-            status: "1"
-          },
-          {
-            id: "4",
-            openId: "8008208820",
-            nickName: "Lia黄丽雅",
-            avatarUrl: "https://wx.qlogo.cn/mmopen/vi_32/d9ZyJzoqENWX6bmqJee1ZwONZYY01wib2KAIibT1KQIZhIBdnRGtg4bicMbb7Eia809lSIUNOyWHvr9iaPjTnrjWx0Q/0",
-            city: "Guangzhou",
-            province: "Guangdong",
-            country: "China",
-            gender: 2,
-            deposit: 200,
-            usageCount: 1,
-            status: "1"
-          }, {
-            id: "5",
-            openId: "8008208820",
-            nickName: "Lia黄丽雅",
-            avatarUrl: "https://wx.qlogo.cn/mmopen/vi_32/d9ZyJzoqENWX6bmqJee1ZwONZYY01wib2KAIibT1KQIZhIBdnRGtg4bicMbb7Eia809lSIUNOyWHvr9iaPjTnrjWx0Q/0",
-            city: "Guangzhou",
-            province: "Guangdong",
-            country: "China",
-            gender: 2,
-            deposit: 200,
-            usageCount: 1,
-            status: "1"
-          }, {
-            id: "6",
-            openId: "8008208820",
-            nickName: "Lia黄丽雅",
-            avatarUrl: "https://wx.qlogo.cn/mmopen/vi_32/d9ZyJzoqENWX6bmqJee1ZwONZYY01wib2KAIibT1KQIZhIBdnRGtg4bicMbb7Eia809lSIUNOyWHvr9iaPjTnrjWx0Q/0",
-            city: "Guangzhou",
-            province: "Guangdong",
-            country: "China",
-            gender: 2,
-            deposit: 200,
-            usageCount: 1,
-            status: "1"
-          },
-          {
-            id: "7",
-            openId: "8008208820",
-            nickName: "Lia黄丽雅",
-            avatarUrl: "https://wx.qlogo.cn/mmopen/vi_32/d9ZyJzoqENWX6bmqJee1ZwONZYY01wib2KAIibT1KQIZhIBdnRGtg4bicMbb7Eia809lSIUNOyWHvr9iaPjTnrjWx0Q/0",
-            city: "Guangzhou",
-            province: "Guangdong",
-            country: "China",
-            gender: 2,
-            deposit: 200,
-            usageCount: 1,
-            status: "1"
-          },
-          {
-            id: "8",
-            openId: "8008208820",
-            nickName: "Lia黄丽雅",
-            avatarUrl: "https://wx.qlogo.cn/mmopen/vi_32/d9ZyJzoqENWX6bmqJee1ZwONZYY01wib2KAIibT1KQIZhIBdnRGtg4bicMbb7Eia809lSIUNOyWHvr9iaPjTnrjWx0Q/0",
-            city: "Guangzhou",
-            province: "Guangdong",
-            country: "China",
-            gender: 2,
-            deposit: 200,
-            usageCount: 1,
-            status: "1"
-          }, {
-            id: "9",
-            openId: "8008208820",
-            nickName: "Lia黄丽雅",
-            avatarUrl: "https://wx.qlogo.cn/mmopen/vi_32/d9ZyJzoqENWX6bmqJee1ZwONZYY01wib2KAIibT1KQIZhIBdnRGtg4bicMbb7Eia809lSIUNOyWHvr9iaPjTnrjWx0Q/0",
-            city: "Guangzhou",
-            province: "Guangdong",
-            country: "China",
-            gender: 2,
-            deposit: 200,
-            usageCount: 1,
-            status: "1"
-          },
-        ],
+        tableData: [],
+        // 表格loading
+        tableLoading: true,
 
         // 是否显示查看详情弹窗
         showDetail: false,
@@ -337,6 +237,18 @@
       }
     },
     methods: {
+      // 获取用户表格信息
+      getUserData() {
+        this.$http.get(getUsers)
+          .then(res => {
+            this.tableData = res.data.data;
+            this.tableLoading = false;
+          })
+          .catch(err => {
+            console.error(err)
+          })
+      },
+      // 点击表格里的删除用户按钮
       handleDelete(data) {
         const that = this;
         that.$confirm('此操作将删除该用户, 是否继续?', '提示', {
@@ -344,10 +256,17 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          that.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
+          that.$http.delete(deleteUser + data.id)
+            .then(res => {
+              that.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+              that.getUserData();
+            })
+            .catch(err => {
+              console.error(err);
+            });
         }).catch(() => {
           that.$message({
             type: 'info',
@@ -366,6 +285,9 @@
         this.showDetail = true;
       }
 
+    },
+    mounted() {
+      this.getUserData();
     }
   }
 </script>
