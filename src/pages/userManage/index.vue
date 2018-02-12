@@ -4,16 +4,17 @@
     <el-row class="top_row">
       <el-row class="title1">:) 用户管理</el-row>
       <el-row class="search">
-        <!--开发者平台ID-->
+        <!--用户ID-->
         <el-col class="title2" style="width: 80px;">用户ID：</el-col>
-        <el-col class="input">
+        <el-col class="input" style="width: 200px">
           <el-input
             placeholder="请输入用户id"
             prefix-icon="el-icon-search"
             v-model="searchData.id">
           </el-input>
         </el-col>
-        <!--用户名-->
+        <!--微信名-->
+        <!--
         <el-col class="title2">微信名：</el-col>
         <el-col class="input">
           <el-input
@@ -22,9 +23,16 @@
             v-model="searchData.nickName">
           </el-input>
         </el-col>
+        -->
         <!--查询按钮-->
         <el-col style="width: 80px;margin-left: 20px">
-          <el-button type="primary" style="height: 40px" size="small" icon="el-icon-search">查询</el-button>
+          <el-button @click="handleSearch" type="primary" style="height: 40px" size="small" icon="el-icon-search">查询</el-button>
+        </el-col>
+        <!--重置按钮-->
+        <el-col style="width: 80px;margin-left: 10px">
+          <el-button @click="handleReset" type="warning" style="height: 40px" size="small">
+            <i class="iconfont icon-chexiao"></i>&nbsp;重置
+          </el-button>
         </el-col>
       </el-row>
     </el-row>
@@ -215,7 +223,7 @@
 </template>
 
 <script>
-  import {getUsers,deleteUser} from "Api/user";
+  import {getUsers, deleteUser, getUserById} from "Api/user";
 
   export default {
     data() {
@@ -223,7 +231,7 @@
         // 搜索框的数据
         searchData: {
           id: "",
-          nickName: ""
+          // nickName: ""
         },
         // 表格数据
         tableData: [],
@@ -239,6 +247,7 @@
     methods: {
       // 获取用户表格信息
       getUserData() {
+        this.tableLoading = true;
         this.$http.get(getUsers)
           .then(res => {
             this.tableData = res.data.data;
@@ -247,6 +256,35 @@
           .catch(err => {
             console.error(err)
           })
+      },
+      // 点击了查询按钮
+      handleSearch() {
+        let id = this.searchData.id;
+        if(!id) {
+          this.$message.warning("请先输入再查询")
+        }
+        else {
+          this.tableLoading = true;
+          this.$http.get(getUserById + id)
+            .then(res => {
+              this.$message.success(`查询成功!`);
+              console.log(res)
+              let array = [];
+              array.push(res.data.data);
+              this.tableData = array;
+              this.tableLoading = false;
+            })
+            .catch(err => {
+              console.error(err);
+            })
+
+        }
+        // getUserById
+      },
+      // 点击了重置按钮
+      handleReset() {
+        this.searchData.id = "";
+        this.getUserData();
       },
       // 点击表格里的删除用户按钮
       handleDelete(data) {
