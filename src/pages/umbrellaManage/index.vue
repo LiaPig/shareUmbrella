@@ -14,13 +14,16 @@
           </el-input>
         </el-col>
         <!--租借点代号-->
-        <el-col class="title2" style="width: 100px">租借点号码：</el-col>
+        <el-col class="title2" style="width: 80px">租借点：</el-col>
         <el-col class="input">
-          <el-input
-            placeholder="请输入租借点号码"
-            prefix-icon="el-icon-search"
-            v-model="searchData.rentPoint">
-          </el-input>
+          <el-select v-model="searchData.rentPointId" placeholder="请选择租借点">
+            <el-option
+              v-for="item in locationOptions"
+              :key="item.id"
+              :label="item.rentName"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </el-col>
         <!--查询按钮-->
         <el-col style="width: 80px;margin-left: 20px">
@@ -34,7 +37,7 @@
       </el-row>
     </el-row>
     <!--雨伞管理表格-->
-    <el-row class="lia_table">
+    <el-row class="lia_table" v-loading="tableLoading" element-loading-text="拼命加载中">
       <template style="">
         <el-table
           :data="tableData"
@@ -78,15 +81,9 @@
           </el-table-column>
           <el-table-column
             sortable
-            prop="region"
-            label="所在地区"
-            width="180">
-          </el-table-column>
-          <el-table-column
-            sortable
-            prop="rentPoint"
-            label="租借点号码"
-            width="180">
+            prop="rentPointId"
+            label="租借点Id"
+            width="200">
           </el-table-column>
           <el-table-column
             sortable
@@ -166,29 +163,29 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <!--所在地区/租借点-->
+        <!--租借点/雨伞状态-->
         <el-row style="margin-top: 20px;">
-          <!--所在地区-->
+          <!--租借点-->
           <el-col :span="1">&nbsp;</el-col>
           <el-col :span="10" style="height: 40px;">
-            <el-form-item label="所在地区:" prop="region">
-              <el-select v-model="form.region" placeholder="请选择" style="width: 100%">
+            <el-form-item label="可租借点:" prop="rentPointId">
+              <el-select v-model="form.rentPointId" placeholder="请选择" style="width: 100%">
                 <el-option
-                  v-for="item in regionOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
+                  v-for="item in locationOptions"
+                  :key="item.id"
+                  :label="item.rentName"
+                  :value="item.id">
                 </el-option>
               </el-select>
             </el-form-item>
           </el-col>
-          <!--租借点-->
+          <!--雨伞状态-->
           <el-col :span="1">&nbsp;</el-col>
           <el-col :span="10" style="height: 40px;">
-            <el-form-item label="可租借点:" prop="rentPoint">
-              <el-select v-model="form.rentPoint" placeholder="请选择" style="width: 100%">
+            <el-form-item label="雨伞状态:" prop="beRentedNumber">
+              <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
                 <el-option
-                  v-for="item in rentPointOptions"
+                  v-for="item in statusOptions"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -221,7 +218,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <!--被租次数/雨伞状态-->
+        <!--被租次数-->
         <el-row style="margin-top: 20px;">
           <!--被租次数-->
           <el-col :span="1">&nbsp;</el-col>
@@ -230,20 +227,7 @@
               <el-input v-model="form.beRentedNumber" :disabled="formType === 1"></el-input>
             </el-form-item>
           </el-col>
-          <!--雨伞状态-->
-          <el-col :span="1">&nbsp;</el-col>
-          <el-col :span="10" style="height: 40px;">
-            <el-form-item label="雨伞状态:" prop="beRentedNumber">
-              <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
-                <el-option
-                  v-for="item in statusOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
+
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -252,7 +236,7 @@
       </div>
     </el-dialog>
     <!--查看详情弹窗-->
-    <el-dialog title="查看雨伞详情" :visible.sync="showDetail">
+    <el-dialog title="查看雨伞详情" :visible.sync="showDetail" width="60%">
       <el-row class="dialogDetail">
         <!--雨伞编号／雨伞类型-->
         <el-row style="padding-top: 30px">
@@ -271,25 +255,25 @@
             </el-col>
           </el-col>
         </el-row>
-        <!--所在地区／雨伞型号-->
+        <!--雨伞型号／可租借点ID-->
         <el-row style="padding-top: 20px">
-          <!--所在地区-->
-          <el-col :span="11">
-            <el-col :span="12" class="title">◆ 所在地区：</el-col>
-            <el-col :span="12" class="content">{{detail.region}}</el-col>
-          </el-col>
           <!--雨伞型号-->
-          <el-col :span="9">
-            <el-col :span="12" class="title">◆&nbsp;&nbsp;雨伞型号&nbsp;&nbsp;：</el-col>
+          <el-col :span="11">
+            <el-col :span="12" class="title">◆&nbsp;雨伞型号：</el-col>
             <el-col :span="12" class="content">{{detail.pattern}}</el-col>
           </el-col>
+          <!--可租借点ID-->
+          <el-col :span="9">
+            <el-col :span="12" class="title">◆ 可租借点ID：</el-col>
+            <el-col :span="12" class="content">{{detail.rentPointId}}</el-col>
+          </el-col>
         </el-row>
-        <!--可租借点／正被租用-->
+        <!--用户的id／正被租用-->
         <el-row style="padding-top: 20px">
-          <!--可租借点-->
+          <!--用户的id-->
           <el-col :span="11">
-            <el-col :span="12" class="title">◆ 可租借点：</el-col>
-            <el-col :span="12" class="content">{{detail.rentPoint}}</el-col>
+            <el-col :span="12" class="title">◆ 用户的id：</el-col>
+            <el-col :span="12" class="content">{{detail.userId}}</el-col>
           </el-col>
           <!--正被租用-->
           <el-col :span="9">
@@ -300,12 +284,17 @@
             </el-col>
           </el-col>
         </el-row>
-        <!--用户的id／被租借次数-->
+        <!--雨伞状态／被租借次数-->
         <el-row style="padding-top: 20px">
-          <!--用户的id-->
+          <!--雨伞状态-->
           <el-col :span="11">
-            <el-col :span="12" class="title">◆ 用户的id：</el-col>
-            <el-col :span="12" class="content">{{detail.userId}}</el-col>
+            <el-col :span="12" class="title">◆ 雨伞状态：</el-col>
+            <el-col :span="12" class="content">
+              <span v-if="detail.status === '0'">禁用</span>
+              <span v-if="detail.status === '1'">正常</span>
+              <span v-if="detail.status === '2'">已报修</span>
+              <span v-if="detail.status === '3'">修理中</span>
+            </el-col>
           </el-col>
           <!--被租借次数-->
           <el-col :span="9">
@@ -313,23 +302,13 @@
             <el-col :span="12" class="content">{{detail.beRentedNumber}}</el-col>
           </el-col>
         </el-row>
-        <!--二维码／雨伞状态-->
+        <!--二维码-->
         <el-row style="padding-top: 20px;margin-bottom: 20px">
           <!--二维码-->
           <el-col :span="11">
             <el-col :span="12" class="title">◆&nbsp;&nbsp;二维码&nbsp;&nbsp;：</el-col>
             <el-col :span="12" class="content">
               <qrcode-vue :value="detail.id" size="100" level="H"></qrcode-vue>
-            </el-col>
-          </el-col>
-          <!--雨伞状态-->
-          <el-col :span="9">
-            <el-col :span="12" class="title">◆&nbsp;&nbsp;雨伞状态&nbsp;&nbsp;：</el-col>
-            <el-col :span="12" class="content">
-              <span v-if="detail.status === '0'">禁用</span>
-              <span v-if="detail.status === '1'">正常</span>
-              <span v-if="detail.status === '2'">已报修</span>
-              <span v-if="detail.status === '3'">修理中</span>
             </el-col>
           </el-col>
         </el-row>
@@ -343,14 +322,18 @@
 
 <script>
   import QrcodeVue from 'qrcode.vue';
+  import {getLocations} from 'Api/location'
+  import {getUmbrellas, addUmbrella, updateUmbrella, deleteUmbrella} from 'Api/umbrella'
 
   export default {
     data() {
       return {
+        // 租借点选项数据
+        locationOptions: [],
         // 搜索的数据
         searchData: {
           id: "",
-          rentPoint: ""
+          rentPointId: ""
         },
         // 是否显示菜单录入弹窗
         showDialog: false,
@@ -370,24 +353,6 @@
             value: '2',
             label: '短款折叠伞'
           },
-        ],
-        // 所在地区选项
-        regionOptions: [
-          {
-            value: 'gz',
-            label: '广州'
-          },
-          {
-            value: 'sz',
-            label: '深圳'
-          },
-        ],
-        // 可租借点选项
-        rentPointOptions: [
-          {
-            value: "023",
-            label: "大学城南"
-          }
         ],
         // 正被租用选项
         beRentedOptions: [
@@ -432,15 +397,15 @@
           region: [
             {required: true, message: '请选择所在地区', trigger: 'change'},
           ],
-          rentPoint: [
+          rentPointId: [
             {required: true, message: '请选择可租借点', trigger: 'change'},
           ],
           beRented: [
             {required: true, message: '请选择是否被租用', trigger: 'change'},
           ],
-          userId: [
-            {required: true, message: '请填写租用的用户id', trigger: 'blur'},
-          ],
+          // userId: [
+          //   {required: true, message: '请填写租用的用户id', trigger: 'blur'},
+          // ],
           beRentedNumber: [
             {required: true, message: '请填写被租借次数', trigger: 'blur'},
           ],
@@ -518,6 +483,8 @@
             status: "1",
           },
         ],
+        // 表格loading
+        tableLoading: true,
         // 是否显示详情弹窗
         showDetail: false,
         // 详情弹窗的数据
@@ -530,6 +497,41 @@
       QrcodeVue
     },
     methods: {
+      // 获取租借点的id和名字组装成一个数组作为选项
+      getLocationOptions() {
+        const that = this;
+        that.$http.get(getLocations)
+          .then(res => {
+            let array = res.data.data;
+            let locationOptions = [];
+            for (let i = 0; i < array.length; i++) {
+              if (array[i].status !== "0") {
+                let obj = {
+                  id: array[i].id,
+                  rentName: array[i].rentName
+                };
+                locationOptions.push(obj);
+              }
+            }
+            that.locationOptions = locationOptions;
+          })
+          .catch(err => {
+            console.error(err)
+          })
+      },
+      // 获取表格数据
+      getTableData() {
+        const that = this;
+        that.tableLoading = true;
+        that.$http.get(getUmbrellas)
+          .then(res => {
+            that.tableData = res.data.data;
+            that.tableLoading = false;
+          })
+          .catch(err => {
+            console.error(err);
+          })
+      },
       // 点击雨伞录入按钮
       handleAdd() {
         this.formType = 1;
@@ -537,13 +539,11 @@
         this.form = {
           pattern: "",
           type: "",
-          region: "",
-          rentPoint: "",
+          rentPointId: "",
           beRented: "0",
-          userId: " ",
+          userId: "",
           beRentedNumber: 0,
           status: "1",
-
         };
         // 打开弹窗
         this.showDialog = true;
@@ -558,15 +558,40 @@
       },
       // 点击弹窗里的确认按钮(formType,2为编辑)
       formSubmit() {
+        const that = this;
         this.$refs["form"].validate((valid) => {
           if (valid) {
             // 1.录入(新增)
             if (this.formType === 1) {
-              this.$message.success("录入成功！");
+              let params = this.form;
+              that.$http.post(addUmbrella, params)
+                .then(res => {
+                  that.$message.success("录入成功！");
+                  that.getTableData();
+                })
+                .catch(err => {
+                  console.error(err);
+                })
             }
             // 2.编辑(修改)
             else if (this.formType === 2) {
-              this.$message.success("修改成功！");
+              let params = {
+                beRented: this.form.beRented,
+                beRentedNumber: this.form.beRentedNumber,
+                id: this.form.id,
+                pattern: this.form.pattern,
+                rentPointId: this.form.rentPointId,
+                status: this.form.status,
+                type: this.form.type,
+              };
+              that.$http.post(updateUmbrella, params)
+                .then(res => {
+                  that.$message.success("修改成功！");
+                  that.getTableData();
+                })
+                .catch(err => {
+                  console.error(err);
+                });
             }
             // 关闭弹窗
             this.showDialog = false;
@@ -584,10 +609,18 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          that.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
+          that.$http.delete(deleteUmbrella + data.id)
+            .then(res => {
+              that.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+              that.getTableData();
+            })
+            .catch(err => {
+              console.error(err);
+            });
+
         }).catch(() => {
           that.$message({
             type: 'info',
@@ -600,10 +633,12 @@
         this.detail = data;
         // 打开弹窗
         this.showDetail = true;
-        console.log(data)
       },
     },
     mounted() {
+      this.getLocationOptions();
+      this.getTableData();
+
     }
   }
 
@@ -618,12 +653,14 @@
     color: #aaa;
     text-align: left;
   }
+
   .umbrellaContainer .title2 {
     width: 70px;
     height: 60px;
     color: #909399;
     text-align: right;
   }
+
   .umbrellaContainer .input {
     width: 160px;
     height: 60px;
