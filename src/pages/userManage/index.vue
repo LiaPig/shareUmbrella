@@ -268,10 +268,15 @@
           this.$http.get(getUserById + id)
             .then(res => {
               this.$message.success(`查询成功!`);
-              console.log(res)
-              let array = [];
-              array.push(res.data.data);
-              this.tableData = array;
+              if(!res.data.data) {
+                this.tableData = [];
+              }
+              else {
+                let array = [];
+                array.push(res.data.data);
+                this.tableData = array;
+              }
+              // 去除loading状态
               this.tableLoading = false;
             })
             .catch(err => {
