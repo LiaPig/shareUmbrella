@@ -32,7 +32,7 @@
             </el-col>
             <el-col :span="15">
               <el-row class="title">雨伞总数</el-row>
-              <el-row class="data" style="color: red;">67890</el-row>
+              <el-row class="data" style="color: red;">{{umbrellas}}</el-row>
             </el-col>
           </el-card>
         </div>
@@ -48,7 +48,7 @@
             <!--<el-col :span="">&nbsp;</el-col>-->
             <el-col :span="15">
               <el-row class="title">租借点总数</el-row>
-              <el-row class="data" style="color: #409EFF;">66666</el-row>
+              <el-row class="data" style="color: #409EFF;">{{locations}}</el-row>
             </el-col>
           </el-card>
         </div>
@@ -69,7 +69,8 @@
 <script>
   import ElCol from "element-ui/packages/col/src/col";
   import {getUsers} from 'Api/user'
-
+  import {getUmbrellas} from 'Api/umbrella'
+  import {getLocations} from 'Api/location'
   export default {
     components: {ElCol},
     data() {
@@ -86,6 +87,10 @@
 
         // 用户总数
         users: 0,
+        // 雨伞总数
+        umbrellas: 0,
+        // 租借点总数
+        locations: 0,
       };
     },
     methods: {
@@ -112,10 +117,32 @@
           .catch(error => {
             console.error(error);
           })
-      }
+      },
+      // 获取雨伞信息
+      getUmbrellaData() {
+        this.$http.get(getUmbrellas)
+          .then(res => {
+            this.umbrellas = res.data.data.length;
+          })
+          .catch(error => {
+            console.error(error);
+          })
+      },
+      // 获取租借点信息
+      getLocationData() {
+        this.$http.get(getLocations)
+          .then(res => {
+            this.locations = res.data.data.length;
+          })
+          .catch(error => {
+            console.error(error);
+          })
+      },
     },
     mounted() {
       this.getUserData();
+      this.getUmbrellaData();
+      this.getLocationData();
     }
   }
 </script>
