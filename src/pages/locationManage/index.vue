@@ -24,7 +24,11 @@
         </el-col>
         <!--查询按钮-->
         <el-col style="width: 80px;margin-left: 20px">
-          <el-button type="primary" size="small" icon="el-icon-search">查询</el-button>
+          <el-button @click="handleSearch" type="primary" size="small" icon="el-icon-search" style="height: 40px">查询</el-button>
+        </el-col>
+        <!--重置按钮-->
+        <el-col style="width: 80px;margin-left: 10px;">
+          <el-button @click="handleReset" type="warning" size="small" icon="iconfont icon-chexiao" style="height: 40px;margin-top: 10px"> 重置</el-button>
         </el-col>
 
         <!--租借点录入按钮-->
@@ -217,7 +221,7 @@
 </template>
 
 <script>
-  import {getLocations, addLocation, updateLocation, deleteLocation} from 'Api/location'
+  import {getLocations, addLocation, updateLocation, deleteLocation, searchLocation} from 'Api/location'
 
   export default {
     data() {
@@ -387,6 +391,35 @@
         // 打开弹窗
         this.showDetail = true;
       },
+      // 点击查询
+      handleSearch() {
+        const that = this;
+        const searchData = that.searchData;
+        if(!searchData.id && !searchData.rentName) {
+          that.$message.warning("请先填写数据再查询");
+        }
+        else {
+          that.tableLoading = true;
+          that.$http.get(searchLocation, {params: searchData})
+            .then(res => {
+              that.tableData = res.data.data.content;
+              that.$message.success("查询成功！")
+            })
+            .catch(err => {
+              console.error(err);
+            });
+          that.tableLoading = false;
+        }
+        // searchLocation
+      },
+      // 点击重置
+      handleReset() {
+        this.searchData = {
+          id: "",
+          rentName: ""
+        };
+        this.getTableData();
+      },
 
     },
     mounted() {
@@ -404,7 +437,7 @@
   }
 
   .locationContainer .input {
-    width: 160px;
+    width: 220px;
     height: 60px;
   }
 

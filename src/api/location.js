@@ -6,3 +6,6 @@ export const addLocation = `api/rents`;
 export const updateLocation = `api/rents/update`;
 // 删除某一个租借点
 export const deleteLocation = `api/rents/`;
+// 查询功能
+export const searchLocation = `api/rents/search?`;
+
