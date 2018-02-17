@@ -27,9 +27,12 @@
         </el-col>
         <!--查询按钮-->
         <el-col style="width: 80px;margin-left: 20px">
-          <el-button type="primary" size="small" icon="el-icon-search">查询</el-button>
+          <el-button @click="handleSearch" type="primary" size="small" icon="el-icon-search" style="height: 40px">查询</el-button>
         </el-col>
-
+        <!--重置按钮-->
+        <el-col style="width: 80px;margin-left: 10px;">
+          <el-button @click="handleReset" type="warning" size="small" icon="iconfont icon-chexiao" style="height: 40px;margin-top: 10px"> 重置</el-button>
+        </el-col>
         <!--雨伞录入按钮-->
         <el-col :span="3" style="float: right;text-align: right;">
           <el-button type="warning" size="small" icon="el-icon-plus" @click="handleAdd">雨伞录入</el-button>
@@ -171,7 +174,7 @@
             <el-form-item label="可租借点:" prop="rentPointId">
               <el-select v-model="form.rentPointId" placeholder="请选择" style="width: 100%">
                 <el-option
-                  v-for="item in locationOptions"
+                  v-for="item in canRentLocationOptions"
                   :key="item.id"
                   :label="item.rentName"
                   :value="item.id">
@@ -330,6 +333,8 @@
       return {
         // 租借点选项数据
         locationOptions: [],
+        // 可以被录入雨伞的租借点选项
+        canRentLocationOptions: [],
         // 搜索的数据
         searchData: {
           id: "",
@@ -415,74 +420,7 @@
         },
 
         // 表格数据
-        tableData: [
-          {
-            id: "8008208820",
-            pattern: "L123455",
-            type: "2",
-            region: "广州",
-            rentPoint: "023",
-            beRented: "1",
-            userId: "8008208820",
-            beRentedNumber: 1,
-            status: "1",
-          },
-          {
-            id: "8008208821",
-            pattern: "S876543",
-            type: "1",
-            region: "广州",
-            rentPoint: "023",
-            beRented: "1",
-            userId: "8008208820",
-            beRentedNumber: 1,
-            status: "2",
-          },
-          {
-            id: "8008208822",
-            pattern: "S876543",
-            type: "1",
-            region: "广州",
-            rentPoint: "023",
-            beRented: "1",
-            userId: "8008208820",
-            beRentedNumber: 1,
-            status: "3",
-          },
-          {
-            id: "8008208823",
-            pattern: "L123455",
-            type: "2",
-            region: "深圳",
-            rentPoint: "023",
-            beRented: "1",
-            userId: "8008208820",
-            beRentedNumber: 1,
-            status: "1",
-          },
-          {
-            id: "8008208824",
-            pattern: "S876543",
-            type: "1",
-            region: "深圳",
-            rentPoint: "023",
-            beRented: "1",
-            userId: "8008208820",
-            beRentedNumber: 1,
-            status: "1",
-          },
-          {
-            id: "8008208825",
-            pattern: "S876543",
-            type: "1",
-            region: "深圳",
-            rentPoint: "023",
-            beRented: "1",
-            userId: "8008208820",
-            beRentedNumber: 1,
-            status: "1",
-          },
-        ],
+        tableData: [],
         // 表格loading
         tableLoading: true,
         // 是否显示详情弹窗
@@ -504,6 +442,7 @@
           .then(res => {
             let array = res.data.data;
             let locationOptions = [];
+            let canRentLocationOptions = [];
             for (let i = 0; i < array.length; i++) {
               if (array[i].status !== "0") {
                 let obj = {
@@ -511,9 +450,13 @@
                   rentName: array[i].rentName
                 };
                 locationOptions.push(obj);
+                if(array[i].returnNum > 0) {
+                  canRentLocationOptions.push(obj);
+                }
               }
             }
             that.locationOptions = locationOptions;
+            that.canRentLocationOptions = canRentLocationOptions;
           })
           .catch(err => {
             console.error(err)
@@ -633,6 +576,34 @@
         this.detail = data;
         // 打开弹窗
         this.showDetail = true;
+      },
+      // 点击查询
+      handleSearch() {
+        const that = this;
+        // const searchData = that.searchData;
+        // if(!searchData.id && !searchData.rentName) {
+        //   that.$message.warning("请先填写数据再查询");
+        // }
+        // else {
+        //   that.tableLoading = true;
+        //   that.$http.get(searchLocation, {params: searchData})
+        //     .then(res => {
+        //       that.tableData = res.data.data;
+        //       that.$message.success("查询成功！")
+        //     })
+        //     .catch(err => {
+        //       console.error(err);
+        //     });
+        //   that.tableLoading = false;
+        // }
+      },
+      // 点击重置
+      handleReset() {
+        this.searchData = {
+          id: "",
+          rentPointId: ""
+        };
+        this.getTableData();
       },
     },
     mounted() {
