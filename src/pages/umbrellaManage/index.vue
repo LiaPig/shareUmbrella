@@ -10,7 +10,7 @@
           <el-input
             placeholder="请输入雨伞id"
             prefix-icon="el-icon-search"
-            v-model="searchData.openId">
+            v-model="searchData.id">
           </el-input>
         </el-col>
         <!--租借点代号-->
@@ -326,7 +326,7 @@
 <script>
   import QrcodeVue from 'qrcode.vue';
   import {getLocations} from 'Api/location'
-  import {getUmbrellas, addUmbrella, updateUmbrella, deleteUmbrella} from 'Api/umbrella'
+  import {getUmbrellas, addUmbrella, updateUmbrella, deleteUmbrella, searchUmbrella} from 'Api/umbrella'
 
   export default {
     data() {
@@ -580,22 +580,23 @@
       // 点击查询
       handleSearch() {
         const that = this;
-        // const searchData = that.searchData;
-        // if(!searchData.id && !searchData.rentName) {
-        //   that.$message.warning("请先填写数据再查询");
-        // }
-        // else {
-        //   that.tableLoading = true;
-        //   that.$http.get(searchLocation, {params: searchData})
-        //     .then(res => {
-        //       that.tableData = res.data.data;
-        //       that.$message.success("查询成功！")
-        //     })
-        //     .catch(err => {
-        //       console.error(err);
-        //     });
-        //   that.tableLoading = false;
-        // }
+        const searchData = that.searchData;
+        if(!searchData.id && !searchData.rentPointId) {
+          that.$message.warning("请先填写数据再查询");
+        }
+        else {
+          that.tableLoading = true;
+          that.$http.get(searchUmbrella, {params: searchData})
+            .then(res => {
+              console.log(res)
+              that.tableData = res.data.data;
+              that.$message.success("查询成功！")
+            })
+            .catch(err => {
+              console.error(err);
+            });
+          that.tableLoading = false;
+        }
       },
       // 点击重置
       handleReset() {

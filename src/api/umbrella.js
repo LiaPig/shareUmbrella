@@ -6,3 +6,5 @@ export const addUmbrella = `api/umbrellas`;
 export const updateUmbrella = `api/umbrellas/update`;
 // 删除一把雨伞
 export const deleteUmbrella = `api/umbrellas/`;
+// 查询功能
+export const searchUmbrella = `api/umbrellas/search?`;
