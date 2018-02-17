@@ -402,7 +402,7 @@
           that.tableLoading = true;
           that.$http.get(searchLocation, {params: searchData})
             .then(res => {
-              that.tableData = res.data.data.content;
+              that.tableData = res.data.data;
               that.$message.success("查询成功！")
             })
             .catch(err => {

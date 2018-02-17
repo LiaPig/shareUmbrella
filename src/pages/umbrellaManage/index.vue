@@ -6,7 +6,7 @@
       <el-row class="search">
         <!--雨伞id-->
         <el-col class="title2" style="width: 80px;">雨伞id：</el-col>
-        <el-col class="input">
+        <el-col class="input" style="width: 210px">
           <el-input
             placeholder="请输入雨伞id"
             prefix-icon="el-icon-search"
