@@ -326,7 +326,7 @@
 <script>
   import QrcodeVue from 'qrcode.vue';
   import {getLocations} from 'Api/location'
-  import {getUmbrellas, addUmbrella, updateUmbrella, deleteUmbrella, searchUmbrella} from 'Api/umbrella'
+  import {getUmbrellas, addUmbrella, updateUmbrella, deleteUmbrella, searchUmbrellaById, searchUmbrellaByRentId} from 'Api/umbrella'
 
   export default {
     data() {
@@ -584,13 +584,26 @@
         if(!searchData.id && !searchData.rentPointId) {
           that.$message.warning("请先填写数据再查询");
         }
-        else {
+        else if (searchData.id){
           that.tableLoading = true;
-          that.$http.get(searchUmbrella, {params: searchData})
+          that.$http.get(searchUmbrellaById + searchData.id)
             .then(res => {
-              console.log(res)
+              let array = [];
+              array.push(res.data.data);
+              that.tableData = array;
+              that.$message.success("根据雨伞id查询成功！")
+            })
+            .catch(err => {
+              console.error(err);
+            });
+          that.tableLoading = false;
+        }
+        else if(searchData.rentPointId) {
+          that.tableLoading = true;
+          that.$http.get(searchUmbrellaByRentId + searchData.rentPointId + "/umbrellas")
+            .then(res => {
               that.tableData = res.data.data;
-              that.$message.success("查询成功！")
+              that.$message.success("根据租借点查询成功！")
             })
             .catch(err => {
               console.error(err);
