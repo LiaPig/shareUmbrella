@@ -300,6 +300,7 @@
             console.error(err)
           })
       },
+
       // 点击租借点录入按钮
       handleAdd() {
         this.formType = 1;
@@ -314,6 +315,36 @@
         // 打开弹窗
         this.showDialog = true;
       },
+      // 点击查询
+      handleSearch() {
+        const that = this;
+        const searchData = that.searchData;
+        if(!searchData.id && !searchData.rentName) {
+          that.$message.warning("请先填写数据再查询");
+        }
+        else {
+          that.tableLoading = true;
+          that.tableData = [];
+          that.$http.get(searchLocation, {params: searchData})
+            .then(res => {
+              that.tableData = res.data.data;
+              that.$message.success("查询成功！")
+            })
+            .catch(err => {
+              console.error(err);
+            });
+          that.tableLoading = false;
+        }
+      },
+      // 点击重置
+      handleReset() {
+        this.searchData = {
+          id: "",
+          rentName: ""
+        };
+        this.getTableData();
+      },
+
       // 点击某一行里的编辑按钮
       handleEdit(data) {
         this.formType = 2;
@@ -399,6 +430,7 @@
         this.showDetail = true;
       },
 
+
     },
     mounted() {
       this.getTableData();
@@ -415,7 +447,7 @@
   }
 
   .locationContainer .input {
-    width: 220px;
+    width: 210px;
     height: 60px;
   }
 
