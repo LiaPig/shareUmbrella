@@ -16,7 +16,7 @@
       </el-row>
     </el-row>
     <!--编辑用户表单-->
-    <el-row class="form">
+    <el-row class="form" v-loading="formLoading" element-loading-text="拼命加载中">
       <el-col :span="24">
         <el-form :model="editForm" :rules="rules" ref="editForm" label-width="100px" class="demo-ruleForm">
           <!--微信名称／所在城市-->
@@ -121,13 +121,15 @@
 </template>
 
 <script>
-  import {updateUser} from 'Api/user'
+  import {getUserById, updateUser} from 'Api/user'
   export default {
     data() {
       // 自定义的确认两次密码是否相同函数
       return {
         // 表单
         editForm: {},
+        // 表单loading
+        formLoading: false,
         // 表单里的性别选项
         genderOptions: [
           {
@@ -221,7 +223,16 @@
       },
       // 根据id获取用户信息
       getFormData(data) {
-        this.editForm = data;
+        this.formLoading = true;
+        this.$http.get(getUserById + data.id)
+          .then(res => {
+            this.editForm = res.data.data;
+            this.formLoading = false;
+          })
+          .catch(err => {
+            console.error(err);
+          })
+
       },
       // 点击修改密码打开修改密码弹窗
       editPassword() {
