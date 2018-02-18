@@ -230,10 +230,103 @@
           <el-button type="warning" @click="formSubmit">确 定</el-button>
         </div>
       </el-dialog>
+      <!--查看详情弹窗-->
+      <el-dialog title="查看订单详情" :visible.sync="showDetail" width="60%">
+        <el-row class="dialogDetail">
+          <!--订单编号／总计费用-->
+          <el-row style="padding-top: 30px">
+            <!--雨伞编号-->
+            <el-col :span="11">
+              <el-col :span="12" class="title">◆ 订单编号：</el-col>
+              <el-col :span="12" class="content">{{detail.id}}</el-col>
+            </el-col>
+            <!--总计费用-->
+            <el-col :span="9">
+              <el-col :span="12" class="title">◆&nbsp;总计费用：</el-col>
+              <el-col :span="12" class="content">
+                <span style="color: red">{{detail.cost}}</span>&nbsp;&nbsp;元
+              </el-col>
+            </el-col>
+          </el-row>
+          <!--租借点id／租借点名-->
+          <el-row style="padding-top: 20px">
+            <!--租借点id-->
+            <el-col :span="11">
+              <el-col :span="12" class="title">◆&nbsp;租借点id：</el-col>
+              <el-col :span="12" class="content">{{detail.rentPointId}}</el-col>
+            </el-col>
+            <!--可租借点ID-->
+            <el-col :span="9">
+              <el-col :span="12" class="title">◆ 租借点名：</el-col>
+              <el-col :span="12" class="content">{{detail.rentName}}</el-col>
+            </el-col>
+          </el-row>
+          <!--归还点id／归还点名-->
+          <el-row style="padding-top: 20px">
+            <!--归还点id-->
+            <el-col :span="11">
+              <el-col :span="12" class="title">◆ 归还点id：</el-col>
+              <el-col :span="12" class="content">{{detail.returnPointId}}</el-col>
+            </el-col>
+            <!--归还点名-->
+            <el-col :span="9">
+              <el-col :span="12" class="title">◆ 归还点名：</el-col>
+              <el-col :span="12" class="content">{{detail.returnName}}</el-col>
+            </el-col>
+          </el-row>
+          <!--租借人id／租借人名-->
+          <el-row style="padding-top: 20px;">
+            <!--租借人id-->
+            <el-col :span="11">
+              <el-col :span="12" class="title">◆ 租借人id：</el-col>
+              <el-col :span="12" class="content">
+                {{detail.userId}}
+              </el-col>
+            </el-col>
+            <!--租借人名-->
+            <el-col :span="10">
+              <el-col :span="11" class="title">◆ 租借人名：</el-col>
+              <el-col :span="12" class="content">{{detail.nickName}}</el-col>
+            </el-col>
+          </el-row>
+          <!--开始时间／结束时间-->
+          <el-row style="padding-top: 20px;">
+            <!--开始时间-->
+            <el-col :span="11">
+              <el-col :span="12" class="title">◆ 开始时间：</el-col>
+              <el-col :span="12" class="content">
+                {{detail.startTime}}
+              </el-col>
+            </el-col>
+            <!--结束时间-->
+            <el-col :span="10">
+              <el-col :span="11" class="title">◆ 结束时间：</el-col>
+              <el-col :span="12" class="content">{{detail.endTime}}</el-col>
+            </el-col>
+          </el-row>
+          <!--订单状态-->
+          <el-row style="padding-top: 20px;margin-bottom: 20px">
+            <!--订单状态-->
+            <el-col :span="11">
+              <el-col :span="12" class="title">◆&nbsp;订单状态：</el-col>
+              <el-col :span="12" class="content">
+                <span v-if="detail.status === '0'">禁用</span>
+                <span v-if="detail.status === '1'">进行中</span>
+                <span v-if="detail.status === '2'">已完成</span>
+              </el-col>
+            </el-col>
+          </el-row>
+        </el-row>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="warning" @click="showDetail = false">确定</el-button>
+        </div>
+      </el-dialog>
     </div>
 </template>
 
 <script>
+    import {getOrders} from "../../api/order";
+
     export default {
         name: "index",
       data() {
@@ -311,6 +404,11 @@
               },
             ],
 
+            // 查看详情
+            detail: {},
+            // 是否显示查看详情弹出框
+            showDetail: false,
+
           }
       },
       methods: {
@@ -369,6 +467,12 @@
             });
           });
         },
+        // 点击某一行的查看详情
+        handleDetail(data) {
+          this.detail = data;
+          // 打开弹窗
+          this.showDetail = true;
+        },
 
         // 点击菜单录入按钮
         handleAdd() {
@@ -411,7 +515,13 @@
         },
       },
       mounted() {
-
+        this.$http.get(getOrders)
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => {
+            console.error(err);
+        })
       }
     }
 </script>
