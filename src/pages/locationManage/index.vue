@@ -352,7 +352,7 @@
         // 根据id获取租借点
         this.$http.get(getLocationById + data.id)
           .then(res => {
-            this.form = data;
+            this.form = res.data.data;
             // 打开弹窗
             this.showDialog = true;
           })
