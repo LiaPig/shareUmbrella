@@ -170,7 +170,7 @@
 </template>
 
 <script>
-  import {addMenu, getMenus, deleteMenu, updateMenu} from 'Api/menu'
+  import {addMenu, getMenus, deleteMenu, getMenuById, updateMenu} from 'Api/menu'
 
   export default {
     data() {
@@ -248,9 +248,16 @@
       handleEdit(data) {
         this.formType = 2;
         this.formTitle = "编辑菜单";
-        this.form = data;
-        // 打开弹窗
-        this.showDialog = true;
+        this.$http.get(getMenuById + data.id)
+          .then(res => {
+            this.form = res.data.data;
+            // 打开弹窗
+            this.showDialog = true;
+          })
+          .catch(err => {
+            console.error(err);
+          })
+
       },
       // 点击弹窗里的确认按钮(formType,2为编辑)
       formSubmit() {
