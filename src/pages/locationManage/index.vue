@@ -221,7 +221,7 @@
 </template>
 
 <script>
-  import {getLocations, addLocation, updateLocation, deleteLocation, searchLocation} from 'Api/location'
+  import {getLocations, addLocation, getLocationById, updateLocation, deleteLocation, searchLocation} from 'Api/location'
 
   export default {
     data() {
@@ -318,9 +318,16 @@
       handleEdit(data) {
         this.formType = 2;
         this.formTitle = "编辑租借点";
-        this.form = data;
-        // 打开弹窗
-        this.showDialog = true;
+        // 根据id获取租借点
+        this.$http.get(getLocationById + data.id)
+          .then(res => {
+            this.form = data;
+            // 打开弹窗
+            this.showDialog = true;
+          })
+          .catch(err => {
+            console.error(err);
+          })
       },
       // 点击弹窗里的确认按钮(formType,2为编辑)
       formSubmit() {
@@ -390,35 +397,6 @@
         this.detail = data;
         // 打开弹窗
         this.showDetail = true;
-      },
-      // 点击查询
-      handleSearch() {
-        const that = this;
-        const searchData = that.searchData;
-        if(!searchData.id && !searchData.rentName) {
-          that.$message.warning("请先填写数据再查询");
-        }
-        else {
-          that.tableLoading = true;
-          that.$http.get(searchLocation, {params: searchData})
-            .then(res => {
-              that.tableData = res.data.data;
-              that.$message.success("查询成功！")
-            })
-            .catch(err => {
-              console.error(err);
-            });
-          that.tableLoading = false;
-        }
-        // searchLocation
-      },
-      // 点击重置
-      handleReset() {
-        this.searchData = {
-          id: "",
-          rentName: ""
-        };
-        this.getTableData();
       },
 
     },
