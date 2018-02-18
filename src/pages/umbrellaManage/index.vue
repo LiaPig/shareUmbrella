@@ -475,6 +475,7 @@
             console.error(err);
           })
       },
+
       // 点击雨伞录入按钮
       handleAdd() {
         this.formType = 1;
@@ -491,6 +492,56 @@
         // 打开弹窗
         this.showDialog = true;
       },
+      // 点击查询
+      handleSearch() {
+        const that = this;
+        const searchData = that.searchData;
+        if(!searchData.id && !searchData.rentPointId) {
+          that.$message.warning("请先填写数据再查询");
+        }
+        else if (searchData.id){
+          that.tableLoading = true;
+          that.$http.get(searchUmbrellaById + searchData.id)
+            .then(res => {
+              let array = [];
+              // 如果返回有结果
+              if(res.data.data) {
+                array.push(res.data.data);
+                that.tableData = array;
+              }
+              else {
+                that.tableData = array;
+              }
+
+              that.$message.success("根据雨伞id查询成功！")
+            })
+            .catch(err => {
+              console.error(err);
+            });
+          that.tableLoading = false;
+        }
+        else if(searchData.rentPointId) {
+          that.tableLoading = true;
+          that.$http.get(searchUmbrellaByRentId + searchData.rentPointId + "/umbrellas")
+            .then(res => {
+              that.tableData = res.data.data;
+              that.$message.success("根据租借点查询成功！")
+            })
+            .catch(err => {
+              console.error(err);
+            });
+          that.tableLoading = false;
+        }
+      },
+      // 点击重置
+      handleReset() {
+        this.searchData = {
+          id: "",
+          rentPointId: ""
+        };
+        this.getTableData();
+      },
+
       // 点击某一行里的编辑按钮
       handleEdit(data) {
         this.formType = 2;
@@ -584,48 +635,7 @@
         // 打开弹窗
         this.showDetail = true;
       },
-      // 点击查询
-      handleSearch() {
-        const that = this;
-        const searchData = that.searchData;
-        if(!searchData.id && !searchData.rentPointId) {
-          that.$message.warning("请先填写数据再查询");
-        }
-        else if (searchData.id){
-          that.tableLoading = true;
-          that.$http.get(searchUmbrellaById + searchData.id)
-            .then(res => {
-              let array = [];
-              array.push(res.data.data);
-              that.tableData = array;
-              that.$message.success("根据雨伞id查询成功！")
-            })
-            .catch(err => {
-              console.error(err);
-            });
-          that.tableLoading = false;
-        }
-        else if(searchData.rentPointId) {
-          that.tableLoading = true;
-          that.$http.get(searchUmbrellaByRentId + searchData.rentPointId + "/umbrellas")
-            .then(res => {
-              that.tableData = res.data.data;
-              that.$message.success("根据租借点查询成功！")
-            })
-            .catch(err => {
-              console.error(err);
-            });
-          that.tableLoading = false;
-        }
-      },
-      // 点击重置
-      handleReset() {
-        this.searchData = {
-          id: "",
-          rentPointId: ""
-        };
-        this.getTableData();
-      },
+
     },
     mounted() {
       this.getLocationOptions();
