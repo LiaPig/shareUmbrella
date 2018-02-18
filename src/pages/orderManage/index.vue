@@ -4,22 +4,22 @@
       <el-row class="top_row">
         <el-row class="title1">:) 订单管理</el-row>
         <el-row class="search">
-          <!--租借点id-->
-          <el-col class="title2" style="width: 80px;">租借点id：</el-col>
+          <!--订单id-->
+          <el-col class="title2" style="width: 70px;">订单id：</el-col>
           <el-col class="input">
             <el-input
-              placeholder="请输入租借点id"
+              placeholder="请输入订单id"
               prefix-icon="el-icon-search"
               v-model="searchData.id">
             </el-input>
           </el-col>
           <!--租借点名称-->
-          <el-col class="title2" style="width: 100px">租借点名称：</el-col>
+          <el-col class="title2" style="width: 100px">租借人名称：</el-col>
           <el-col class="input">
             <el-input
-              placeholder="请输入租借点名称"
+              placeholder="请输入租借人名称"
               prefix-icon="el-icon-search"
-              v-model="searchData.rentName">
+              v-model="searchData.nickName">
             </el-input>
           </el-col>
           <!--查询按钮-->
@@ -120,13 +120,13 @@
       <!--弹出框-->
       <el-dialog :title="formTitle" :visible.sync="showDialog" width="65%">
         <el-form :model="form" ref="form" label-width="100px" :rules="formRules">
-          <!--租借点id/租借点名称-->
+          <!--订单id/租借点名称-->
           <el-row>
-            <!--租借点id-->
+            <!--订单id-->
             <el-col :span="1">&nbsp;</el-col>
             <el-col :span="10" style="height: 40px;">
-              <el-form-item label="租借点id:" prop="rentPointId">
-                <el-input v-model="form.rentPointId" placeholder="请输入租借点id"></el-input>
+              <el-form-item label="订单id:" prop="id">
+                <el-input v-model="form.id" placeholder="请输入订单id"></el-input>
               </el-form-item>
             </el-col>
             <!--租借点名-->
@@ -241,7 +241,7 @@
             // 查询的数据
             searchData: {
               id: "",
-              rentName: ""
+              nickName: ""
             },
 
             // 表格数据
