@@ -4,3 +4,6 @@ export const getOrders = `api/orders`;
 export const getOrderById = `api/orders/`;
 // 编辑某订单的信息
 export const updateOrder = `api/orders/update`;
+// 查询功能
+export const searchOrder = `api/orders/search?`;
+

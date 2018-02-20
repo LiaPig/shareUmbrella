@@ -328,7 +328,7 @@
 </template>
 
 <script>
-  import {getOrders, getOrderById, updateOrder} from "../../api/order";
+  import {getOrders, getOrderById, updateOrder, searchOrder} from "../../api/order";
 
   export default {
     data() {
@@ -433,18 +433,33 @@
 
       // 点击查询按钮
       handleSearch() {
-        if (!this.searchData.id && !this.searchData.rentName) {
-          this.$message.warning("请先填写数据再查询!");
+        const that = this;
+        const searchData = that.searchData;
+        if(!searchData.id && !searchData.nickName) {
+          that.$message.warning("请先填写数据再查询");
+        }
+        else {
+          that.tableLoading = true;
+          that.tableData = [];
+          that.$http.get(searchOrder, {params: searchData})
+            .then(res => {
+              that.tableData = res.data.data;
+              that.$message.success("查询成功！")
+            })
+            .catch(err => {
+              console.error(err);
+            });
+          that.tableLoading = false;
         }
       },
       // 点击重置按钮
       handleReset() {
         this.searchData = {
           id: "",
-          rentName: ""
+          nickName: ""
         };
         // 重新获取所有数据
-
+        this.getTableData();
       },
 
       // 点击某一行里的编辑按钮
