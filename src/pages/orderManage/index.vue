@@ -328,7 +328,7 @@
 </template>
 
 <script>
-  import {getOrders, getOrderById, updateOrder, searchOrder} from "../../api/order";
+  import {getOrders, getOrderById, updateOrder, searchOrder, deleteOrder} from "../../api/order";
 
   export default {
     data() {
@@ -526,21 +526,17 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          that.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-          // that.$http.delete(deleteMenu + data.id)
-          //   .then(res => {
-          //     that.$message({
-          //       type: 'success',
-          //       message: '删除成功!'
-          //     });
-          //     that.getTableData();
-          //   })
-          //   .catch(err => {
-          //     console.error(err);
-          //   });
+          that.$http.delete(deleteOrder + data.id)
+            .then(res => {
+              that.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+              that.getTableData();
+            })
+            .catch(err => {
+              console.error(err);
+            });
         }).catch(() => {
           that.$message({
             type: 'info',

@@ -6,4 +6,6 @@ export const getOrderById = `api/orders/`;
 export const updateOrder = `api/orders/update`;
 // 查询功能
 export const searchOrder = `api/orders/search?`;
+// 删除某一个租借点
+export const deleteOrder = `api/orders/`;
 
