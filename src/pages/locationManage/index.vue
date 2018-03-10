@@ -2,22 +2,22 @@
   <div class="locationContainer">
     <!--标题／操作按钮行-->
     <el-row class="top_row">
-      <el-row class="title1">:) 租借点管理</el-row>
+      <el-row class="title1">:) 借还点管理</el-row>
       <el-row class="search">
-        <!--租借点id-->
-        <el-col class="title2" style="width: 80px;">租借点id：</el-col>
+        <!--借还点id-->
+        <el-col class="title2" style="width: 80px;">借还点id：</el-col>
         <el-col class="input">
           <el-input
-            placeholder="请输入租借点id"
+            placeholder="请输入借还点id"
             prefix-icon="el-icon-search"
             v-model="searchData.id">
           </el-input>
         </el-col>
-        <!--租借点名称-->
-        <el-col class="title2" style="width: 100px">租借点名称：</el-col>
+        <!--借还点名称-->
+        <el-col class="title2" style="width: 100px">借还点名称：</el-col>
         <el-col class="input">
           <el-input
-            placeholder="请输入租借点名称"
+            placeholder="请输入借还点名称"
             prefix-icon="el-icon-search"
             v-model="searchData.rentName">
           </el-input>
@@ -31,14 +31,14 @@
           <el-button @click="handleReset" type="warning" size="small" icon="iconfont icon-chexiao" style="height: 40px;margin-top: 10px"> 重置</el-button>
         </el-col>
 
-        <!--租借点录入按钮-->
+        <!--借还点录入按钮-->
         <el-col :span="3" style="float: right;text-align: right;">
-          <el-button type="warning" size="small" icon="el-icon-plus" @click="handleAdd">租借点录入</el-button>
+          <el-button type="warning" size="small" icon="el-icon-plus" @click="handleAdd">借还点录入</el-button>
         </el-col>
       </el-row>
 
     </el-row>
-    <!--租借点管理表格-->
+    <!--借还点管理表格-->
     <el-row class="lia_table" v-loading="tableLoading" element-loading-text="拼命加载中">
       <template style="">
         <el-table
@@ -52,13 +52,13 @@
           <el-table-column
             sortable
             prop="id"
-            label="租借点id"
+            label="借还点id"
             width="200">
           </el-table-column>
           <el-table-column
             sortable
             prop="rentName"
-            label="租借点名称"
+            label="借还点名称"
             width="250">
           </el-table-column>
           <el-table-column
@@ -107,13 +107,13 @@
     <!--录入／编辑弹出框-->
     <el-dialog :title="formTitle" :visible.sync="showDialog">
       <el-form :model="form" ref="form" label-width="100px" :rules="formRules">
-        <!--租借点名称/容量-->
+        <!--借还点名称/容量-->
         <el-row>
-          <!--租借点名称-->
+          <!--借还点名称-->
           <el-col :span="1">&nbsp;</el-col>
           <el-col :span="10" style="height: 40px;">
-            <el-form-item label="租借点名称:" prop="rentName">
-              <el-input v-model="form.rentName" placeholder="请输入租借点名称"></el-input>
+            <el-form-item label="借还点名称:" prop="rentName">
+              <el-input v-model="form.rentName" placeholder="请输入借还点名称"></el-input>
             </el-form-item>
           </el-col>
           <!--容量-->
@@ -144,12 +144,12 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <!--租借点状态-->
+        <!--借还点状态-->
         <el-row style="margin-top: 20px;">
-          <!--租借点状态-->
+          <!--借还点状态-->
           <el-col :span="1">&nbsp;</el-col>
           <el-col :span="10" style="height: 40px;">
-            <el-form-item label="租借点状态:" prop="status">
+            <el-form-item label="借还点状态:" prop="status">
               <el-select v-model="form.status" placeholder="请选择" style="width: 100%">
                 <el-option
                   v-for="item in statusOptions"
@@ -168,18 +168,18 @@
       </div>
     </el-dialog>
     <!--查看详情弹窗-->
-    <el-dialog title="查看租借点详情" :visible.sync="showDetail" width="60%">
+    <el-dialog title="查看借还点详情" :visible.sync="showDetail" width="60%">
       <el-row class="dialogDetail">
-        <!--租借点的id／租借点名称-->
+        <!--借还点的id／借还点名称-->
         <el-row style="padding-top: 30px">
-          <!--租借点的id-->
+          <!--借还点的id-->
           <el-col :span="11">
-            <el-col :span="12" class="title">◆ 租借点的id：</el-col>
+            <el-col :span="12" class="title">◆ 借还点的id：</el-col>
             <el-col :span="12" class="content">{{detail.id}}</el-col>
           </el-col>
-          <!--租借点名称-->
+          <!--借还点名称-->
           <el-col :span="9">
-            <el-col :span="12" class="title">◆ 租借点名称：</el-col>
+            <el-col :span="12" class="title">◆ 借还点名称：</el-col>
             <el-col :span="12" class="content">{{detail.rentName}}</el-col>
           </el-col>
         </el-row>
@@ -196,16 +196,16 @@
             <el-col :span="12" class="content">{{detail.beRentedNum}}</el-col>
           </el-col>
         </el-row>
-        <!--可还伞座量／租借点状态-->
+        <!--可还伞座量／借还点状态-->
         <el-row style="padding-top: 20px;margin-bottom: 30px">
           <!--可还伞座量-->
           <el-col :span="11">
             <el-col :span="12" class="title">◆ 可还伞座量：</el-col>
             <el-col :span="12" class="content">{{detail.returnNum}}</el-col>
           </el-col>
-          <!--租借点状态-->
+          <!--借还点状态-->
           <el-col :span="9">
-            <el-col :span="12" class="title">◆&nbsp;租借点状态：</el-col>
+            <el-col :span="12" class="title">◆&nbsp;借还点状态：</el-col>
             <el-col :span="12" class="content">
               <span v-if="detail.status === '0'">禁用</span>
               <span v-if="detail.status === '1'">正常</span>
@@ -253,10 +253,10 @@
         // 弹窗里的表单认证
         formRules: {
           rentPoint: [
-            {required: true, message: '请输入租借点代号', trigger: 'blur'},
+            {required: true, message: '请输入借还点代号', trigger: 'blur'},
           ],
           rentName: [
-            {required: true, message: '请选择租借点名称', trigger: 'blur'},
+            {required: true, message: '请选择借还点名称', trigger: 'blur'},
           ],
           region: [
             {required: true, message: '请选择所在地区', trigger: 'blur'},
@@ -301,10 +301,10 @@
           })
       },
 
-      // 点击租借点录入按钮
+      // 点击借还点录入按钮
       handleAdd() {
         this.formType = 1;
-        this.formTitle = "租借点录入";
+        this.formTitle = "借还点录入";
         this.form = {
           rentName: "",
           capacity: 0,
@@ -348,8 +348,8 @@
       // 点击某一行里的编辑按钮
       handleEdit(data) {
         this.formType = 2;
-        this.formTitle = "编辑租借点";
-        // 根据id获取租借点
+        this.formTitle = "编辑借还点";
+        // 根据id获取借还点
         this.$http.get(getLocationById + data.id)
           .then(res => {
             this.form = res.data.data;
@@ -399,7 +399,7 @@
       // 点击某一行里的删除按钮
       handleDelete(data) {
         const that = this;
-        that.$confirm('此操作将删除该租借点, 是否继续?', '提示', {
+        that.$confirm('此操作将删除该借还点, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
