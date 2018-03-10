@@ -64,7 +64,8 @@
             width="120">
             <template slot-scope="scope">
               <span v-if="scope.row.status === '1'">进行中</span>
-              <span v-else-if="scope.row.status === '2'">已完成</span>
+              <span v-else-if="scope.row.status === '2'">待支付</span>
+              <span v-else-if="scope.row.status === '3'">已完成</span>
               <span v-else>禁用</span>
             </template>
           </el-table-column>
@@ -402,6 +403,10 @@
           },
           {
             value: "2",
+            label: "待支付"
+          },
+          {
+            value: "3",
             label: "已完成"
           },
         ],
