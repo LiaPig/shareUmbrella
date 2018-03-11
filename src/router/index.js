@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
+import store from '../store/index'
 
 Vue.use(Router);
 // 懒加载组件
+const login = () => import('Pages/login/index.vue');
 const loading = () => import('Components/common/loading/index.vue');
 const home = () => import('Pages/home/home.vue');
 const user = () => import('Pages/userManage/index.vue');
@@ -19,8 +21,18 @@ const test = () => import('Pages/test.vue');
 
 
 const routes = [
+  // 登录页面
   {
-    path: '/',
+    path: '/login',
+    name: "login",
+    component: login,
+    meta: {
+      requiresAuth: false
+    }
+  },
+
+  {
+    path: '*',
     redirect: '/home',
     name: 'HelloWorld',
     component: HelloWorld,
@@ -42,6 +54,7 @@ const routes = [
           requiresAuth: true
         }
       },
+
       // 主页
       {
         path: '/home',
@@ -113,7 +126,28 @@ const routes = [
     ]
   }
 ];
+const router = new Router({
+  routes
+});
 
-export default new Router({
-  routes: routes
-})
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(r => r.meta.requiresAuth)) {  // 判断该路由是否需要登录权限
+    console.log(store.getters.isLogin);
+    if (store.getters.isLogin) {  // 通过vuex 如果当前有登录
+      next();
+    }
+    else {
+      console.log("没有登录吖")
+      next({
+        path: '/login',
+        query: {redirect: to.fullPath}
+      })
+    }
+  }
+  else {
+    next();
+  }
+});
+
+export default router;
