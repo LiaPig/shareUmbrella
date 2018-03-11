@@ -126,10 +126,15 @@ const routes = [
     ]
   }
 ];
+
+// 页面刷新时，重新赋值token
+if (window.localStorage.getItem('isLogin')) {
+  store.commit('setIsLogin', window.localStorage.getItem('isLogin'));
+}
+
 const router = new Router({
   routes
 });
-
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(r => r.meta.requiresAuth)) {  // 判断该路由是否需要登录权限

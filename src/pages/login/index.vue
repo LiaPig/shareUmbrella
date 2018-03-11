@@ -54,6 +54,8 @@
                 type: 'success'
               });
               this.$store.commit('setIsLogin', true);
+              window.localStorage.setItem('isLogin', true);
+              // Cookies.set('Token', response.data.token)
               this.$router.push({path: '/home'});
 
             }
