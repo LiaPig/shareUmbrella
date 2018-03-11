@@ -5,7 +5,7 @@ import store from '../store/index'
 
 Vue.use(Router);
 // 懒加载组件
-const login = () => import('Pages/login/index.vue');
+const login = () => import('Components/common/login/index.vue');
 const loading = () => import('Components/common/loading/index.vue');
 const home = () => import('Pages/home/home.vue');
 const user = () => import('Pages/userManage/index.vue');

@@ -42,11 +42,14 @@
       },
       handleCommand(command) {
         if(command === "exit") {
+          this.$store.commit('setIsLogin', false);
+          window.localStorage.setItem('isLogin', false);
           this.$notify({
             title: '退出登录成功',
             message: '请重新登录',
             type: 'success'
           });
+          this.$router.push({path: '/login'});
         }
       }
     },

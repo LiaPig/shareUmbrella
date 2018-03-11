@@ -48,9 +48,10 @@
       handleSubmit() {
         this.$refs["loginForm"].validate((valid) => {
           if (valid) {
-            if(this.loginForm.password === "admin") {
-              this.$message({
-                message: '恭喜你，登录成功!',
+            if(this.loginForm.userName === "admin" && this.loginForm.password === "admin") {
+              this.$notify({
+                title: '恭喜你',
+                message: '登录成功!',
                 type: 'success'
               });
               this.$store.commit('setIsLogin', true);
