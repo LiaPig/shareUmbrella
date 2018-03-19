@@ -47,7 +47,7 @@
             </el-col>
             <!--<el-col :span="">&nbsp;</el-col>-->
             <el-col :span="15">
-              <el-row class="title">租借点总数</el-row>
+              <el-row class="title">租还点总数</el-row>
               <el-row class="data" style="color: #409EFF;">{{locations}}</el-row>
             </el-col>
           </el-card>
@@ -89,7 +89,7 @@
         users: 0,
         // 雨伞总数
         umbrellas: 0,
-        // 租借点总数
+        // 租还点总数
         locations: 0,
       };
     },
@@ -128,7 +128,7 @@
             console.error(error);
           })
       },
-      // 获取租借点信息
+      // 获取租还点信息
       getLocationData() {
         this.$http.get(getLocations)
           .then(res => {
