@@ -127,7 +127,7 @@ const routes = [
   }
 ];
 
-// 页面刷新时，重新赋值token
+// 页面刷新时，重新赋值有没登录
 if (window.localStorage.getItem('isLogin')) {
   store.commit('setIsLogin', window.localStorage.getItem('isLogin'));
 }

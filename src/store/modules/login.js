@@ -9,10 +9,7 @@ const login = {
     }
   },
   actions: {
-    // 改变菜单的收起／展开状态
-    // changeIsCollapse (context) {
-    //   context.commit('setIsCollapse')
-    // }
+
   },
 }
 
